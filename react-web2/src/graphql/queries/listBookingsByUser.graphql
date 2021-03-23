@@ -1,0 +1,21 @@
+query  listSpecificBookings{
+   listSpecificBookings {
+  booking{
+      id
+      RequestedOn
+      StartTime
+      EndTime
+      sportPitchi{
+        name
+      }
+			
+      }
+    user{
+      id
+      username
+    }
+    
+  }
+}
+
+  

@@ -1,0 +1,23 @@
+mutation createBooking($booking: bookingInput!) {
+  createBookingNew(booking: $booking) {
+     errors{
+      field
+      message
+    }
+
+    bookingk {
+      id
+      RequestedOn
+      StartTime
+      EndTime
+      sportPitchi {
+        name
+        pricePerHour
+      }
+      bookingStatus {
+        id
+        status
+      }
+    }
+  }
+}
