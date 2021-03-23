@@ -15,9 +15,11 @@ interface registerProps {}
 const createBooking: React.FC<registerProps> = ({}) => {
     const router = useRouter();
     UseIsAuth();
+    
     const [, createBookingNew] = useCreateBookingMutation();
     return (
 
+      
         
       <Layout>
         <Formik
@@ -43,7 +45,8 @@ const createBooking: React.FC<registerProps> = ({}) => {
               <InputField name="sportpitchid" placeholder="sportpitchid" label="sportpitchid"type="number" />
               <InputField name="statusid" placeholder="statusid" label="statusid" type="number"/>
               </Box>
-  
+
+              
               <Button
                 mt={4}
                 type="submit"

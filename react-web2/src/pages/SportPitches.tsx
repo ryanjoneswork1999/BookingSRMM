@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import NextLink from 'next/link';
 import React from "react";
@@ -45,6 +45,15 @@ const SportPitch = () => {
           <Text mt={4}>Name: {p.name}</Text>
           <Text mt={4}>Available From: {p.StartTime} - {p.EndTime}</Text>
           <Text mt={4} mb={4}> Price Per Hour: £{p.pricePerHour}</Text>
+          <NextLink href={{
+            pathname: '/create-booking',
+            query: { Pitch: p.id },
+          }}>
+      <Link ml='auto'>
+      <Button>Select</Button>
+      </Link >
+      
+      </NextLink>
         </Box>
             
             
