@@ -1,0 +1,10 @@
+query listPitches{
+    listPitches{
+    id
+    name
+    pricePerHour
+    StartTime
+    EndTime
+  
+}
+}

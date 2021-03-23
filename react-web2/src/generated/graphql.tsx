@@ -388,6 +388,17 @@ export type ListSpecificBookingsQuery = (
   )> }
 );
 
+export type ListPitchesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListPitchesQuery = (
+  { __typename?: 'Query' }
+  & { listPitches: Array<(
+    { __typename?: 'SportPitch' }
+    & Pick<SportPitch, 'id' | 'name' | 'pricePerHour' | 'StartTime' | 'EndTime'>
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -554,6 +565,21 @@ export const ListSpecificBookingsDocument = gql`
 
 export function useListSpecificBookingsQuery(options: Omit<Urql.UseQueryArgs<ListSpecificBookingsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ListSpecificBookingsQuery>({ query: ListSpecificBookingsDocument, ...options });
+};
+export const ListPitchesDocument = gql`
+    query listPitches {
+  listPitches {
+    id
+    name
+    pricePerHour
+    StartTime
+    EndTime
+  }
+}
+    `;
+
+export function useListPitchesQuery(options: Omit<Urql.UseQueryArgs<ListPitchesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ListPitchesQuery>({ query: ListPitchesDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

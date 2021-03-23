@@ -21,7 +21,7 @@ const createBooking: React.FC<registerProps> = ({}) => {
         
       <Layout>
         <Formik
-          initialValues={{ RequestedOn: "", StartTime: "", EndTime: "", sportpitchid: 0, statusid:0}}
+          initialValues={{ RequestedOn: "", StartTime: "", EndTime: "", sportpitchid: 1, statusid:1}}
           onSubmit={async (booking, {setErrors}) => {
             const response = await createBookingNew({booking: booking});
             console.log(response)
