@@ -5,13 +5,19 @@ import React from "react";
 import { Layout } from "../components/Layout";
 import { useListPitchesQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-
+import moment from 'moment'
 
 const SportPitch = () => {
 
-    
-    
-    
+  
+  let time = moment('15:00:00',"HH:mm:ss").add(1,'h').format("HH:mm:ss")
+
+  let time2 = moment('10:00:00',"HH:mm:ss").format("HH:mm:ss")
+ 
+  let time3 = moment(time,"HH").subtract(time2,"h").format("HH")
+
+  let time4 = moment(time3,"HH").subtract(1,"h").format("H")
+    //moment(time).add(1, 'hour')
     const [{ data, fetching}] = useListPitchesQuery({
     
     });
@@ -23,6 +29,7 @@ const SportPitch = () => {
 
 
     return (
+      
         <Layout>
           <Flex align='center'> 
             <Heading>Sport Pitches</Heading>
@@ -38,11 +45,12 @@ const SportPitch = () => {
             <Stack spacing={8}>
 
                 
-                
             {data!.listPitches.map((p) => (
-          
+              
           <Box key={p.id} p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
           <Text mt={4}>Name: {p.name}</Text>
+          <Text mt={4}>time: {time4}</Text>
+          <Text mt={4}>{moment(p.StartTime,"hh:mm:ss").format("hh:mm:ss")}</Text>
           <Text mt={4}>Available From: {p.StartTime} - {p.EndTime}</Text>
           <Text mt={4} mb={4}> Price Per Hour: £{p.pricePerHour}</Text>
           <NextLink href={{

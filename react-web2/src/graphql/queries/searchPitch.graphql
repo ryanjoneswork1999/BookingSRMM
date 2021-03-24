@@ -1,0 +1,8 @@
+query searchPitch($ID: Int!){
+  searchPitch(ID: $ID){
+    name
+    StartTime
+    EndTime
+    pricePerHour
+  }
+}

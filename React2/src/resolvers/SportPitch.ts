@@ -1,4 +1,4 @@
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Field, InputType, Int, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
 import { SportPitch } from "../entites/SportPitch";
 
@@ -46,4 +46,20 @@ export class SportPitchResolver {
       return qb.getMany()
 
   }
+
+
+  @Query(() => SportPitch)
+  async searchPitch(
+    @Arg("ID", () => Int) pitchID: number
+  ):Promise<SportPitch | undefined>{
+    
+
+    return SportPitch.findOne(pitchID);
+
+  
+    
+
+  }
+
+ 
 }

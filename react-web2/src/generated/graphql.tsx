@@ -21,6 +21,7 @@ export type Query = {
   post?: Maybe<Post>;
   me?: Maybe<User>;
   listPitches: Array<SportPitch>;
+  searchPitch: SportPitch;
   isBookedBool: Scalars['Boolean'];
   isBooked: Array<Booking>;
   listSpecificBookings: Array<UserHasBooking>;
@@ -38,6 +39,11 @@ export type QueryPostsArgs = {
 
 export type QueryPostArgs = {
   id: Scalars['Float'];
+};
+
+
+export type QuerySearchPitchArgs = {
+  ID: Scalars['Int'];
 };
 
 
@@ -424,6 +430,19 @@ export type PostsQuery = (
   )> }
 );
 
+export type SearchPitchQueryVariables = Exact<{
+  ID: Scalars['Int'];
+}>;
+
+
+export type SearchPitchQuery = (
+  { __typename?: 'Query' }
+  & { searchPitch: (
+    { __typename?: 'SportPitch' }
+    & Pick<SportPitch, 'name' | 'StartTime' | 'EndTime' | 'pricePerHour'>
+  ) }
+);
+
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -606,4 +625,18 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
+};
+export const SearchPitchDocument = gql`
+    query searchPitch($ID: Int!) {
+  searchPitch(ID: $ID) {
+    name
+    StartTime
+    EndTime
+    pricePerHour
+  }
+}
+    `;
+
+export function useSearchPitchQuery(options: Omit<Urql.UseQueryArgs<SearchPitchQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<SearchPitchQuery>({ query: SearchPitchDocument, ...options });
 };
