@@ -1,4 +1,4 @@
-import { Box, Button,Text } from "@chakra-ui/react";
+import { Box, Button,Flex,Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
@@ -80,14 +80,16 @@ const createBooking: React.FC<registerProps> = ({}) => {
 
             
             <Form>
-
+           <Box w="100%">
           { total3.map((a) => (
           
-            <Button m={4} block>{a.ex} - {a.ex2}</Button>
+            <Button w="100%" mb={2} block>{a.ex} - {a.ex2}</Button>
+            
           
           )
           )
           }
+          </Box>
           <Box p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
           <Text mt={4}>Requested On: {data?.searchPitch.name}</Text>
           <Text mt={4}>Start Time: {data?.searchPitch.StartTime}</Text>

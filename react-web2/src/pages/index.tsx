@@ -27,7 +27,7 @@ const Index = () => {
       </Link >
 
       </NextLink>
-      <NextLink href="/create-booking">
+      <NextLink href="/SportPitches">
       <Link ml='auto'>
       create booking
       </Link >
