@@ -67,7 +67,7 @@ class bookingInput {
 }
 
 @InputType()
-class isBooked {
+class IsBooked {
   @Field()
   RequestedOn: string;
 
@@ -96,22 +96,44 @@ export class BookingResolver {
     
   }
 
-  @Query(() => Boolean)
-  async isBookedBool(@Arg("request") isBook: isBooked): Promise<Boolean> {
-    let StartTime = isBook.StartTime;
-    let EndTime = isBook.EndTime;
-    let sportpitchid = isBook.BookingPitch;
-    let RequestedOn = isBook.RequestedOn;
+  // @Query(() => Boolean)
+  // async isBookedBool(@Arg("request") request: IsBooked): Promise<Boolean> {
+  //   let StartTime = request.StartTime;
+  //   let EndTime = request.EndTime;
+  //   let sportpitchid = request.BookingPitch;
+  //   let RequestedOn = request.RequestedOn;
 
-    const photoRepository = getConnection().getRepository(Booking);
+  //   const photoRepository = getConnection().getRepository(Booking);
+  //   let booking = await photoRepository.findOne({
+  //     relations: ["sportPitchi", "bookingStatus"],
+  //     where: { StartTime, EndTime, sportpitchid, RequestedOn },
+  //   });
+
+  //   console.log("Book"+booking);
+
+  //   if (!booking) {
+  //     return false;
+  //   }
+
+  //   return true;
+  // }
+
+
+  @Query(() => Boolean)
+  async isBookedBoolNew(@Arg("StartTime", () => String) StartTime: String,@Arg("EndTime", () => String) EndTime: String,@Arg("sportpitchid", () => Int) sportpitchid: number,@Arg("RequestedOn", () => String) RequestedOn: String): Promise<Boolean | undefined> {
+   
+    console.log("StartTime"+StartTime)
+    console.log("EndTime"+EndTime)
+
+    const photoRepository = await getConnection().getRepository(Booking);
     let booking = await photoRepository.findOne({
-      relations: ["sportPitchi", "bookingStatus"],
       where: { StartTime, EndTime, sportpitchid, RequestedOn },
     });
 
     console.log("Book"+booking);
 
     if (!booking) {
+      console.log("reached here false")
       return false;
     }
 
@@ -147,7 +169,7 @@ export class BookingResolver {
     let val3 = booking.EndTime
     let val4 = booking.sportpitchid
 
-  let bool = await this.isBookedBool({RequestedOn: val1,StartTime:val2,EndTime:val3,BookingPitch:val4})
+  let bool = await this.isBookedBoolNew(val2,val3,val4,val1)
 
   
   if(!bool){

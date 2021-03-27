@@ -1,0 +1,4 @@
+query isBookedBoolNew($StartTime:String!, $EndTime:String!, $sportpitchid:Int!, $RequestedOn:String!){
+  isBookedBoolNew(StartTime:$StartTime, EndTime:$EndTime,sportpitchid:$sportpitchid, RequestedOn:$RequestedOn)
+    
+}

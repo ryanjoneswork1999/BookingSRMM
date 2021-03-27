@@ -1,7 +1,7 @@
 import { Arg, Field, InputType, Int, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
 import { SportPitch } from "../entites/SportPitch";
-
+import moment from 'moment';
 
 @InputType()
 class SportInput {
@@ -47,6 +47,24 @@ export class SportPitchResolver {
 
   }
 
+  @Query(() => Int)
+  async totalOpen(
+    @Arg("ID", () => Int) pitchID: number
+  ):Promise<Number> {
+
+    
+
+    const photoRepository = getConnection().getRepository(SportPitch);
+    let booking = await photoRepository.findOne(pitchID)
+
+    let time2 = Number(moment(booking?.StartTime,"HH:mm:ss").format("H"))
+    let time = Number(moment(booking?.EndTime,"HH:mm:ss").format("H"))
+
+    return time-time2
+
+
+    
+  }
 
   @Query(() => SportPitch)
   async searchPitch(

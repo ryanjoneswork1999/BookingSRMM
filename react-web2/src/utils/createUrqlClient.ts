@@ -80,9 +80,9 @@ export const createUrqlClient = (ssrExchange:any) =>({
               }
             )
             
-            console.log(cache.inspectFields("Query"))
+            cache.inspectFields("Query")
             cache.invalidate("Query","listSpecificBookings")
-            console.log(cache.inspectFields("Query"))
+            
           },
 
           

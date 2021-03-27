@@ -21,8 +21,9 @@ export type Query = {
   post?: Maybe<Post>;
   me?: Maybe<User>;
   listPitches: Array<SportPitch>;
+  totalOpen: Scalars['Int'];
   searchPitch: SportPitch;
-  isBookedBool: Scalars['Boolean'];
+  isBookedBoolNew: Scalars['Boolean'];
   isBooked: Array<Booking>;
   listSpecificBookings: Array<UserHasBooking>;
   listUserBookings: Array<UserHasBooking>;
@@ -42,13 +43,21 @@ export type QueryPostArgs = {
 };
 
 
+export type QueryTotalOpenArgs = {
+  ID: Scalars['Int'];
+};
+
+
 export type QuerySearchPitchArgs = {
   ID: Scalars['Int'];
 };
 
 
-export type QueryIsBookedBoolArgs = {
-  request: IsBooked;
+export type QueryIsBookedBoolNewArgs = {
+  RequestedOn: Scalars['String'];
+  sportpitchid: Scalars['Int'];
+  EndTime: Scalars['String'];
+  StartTime: Scalars['String'];
 };
 
 
@@ -90,13 +99,6 @@ export type SportPitch = {
   StartTime: Scalars['String'];
   EndTime: Scalars['String'];
   createdAt: Scalars['String'];
-};
-
-export type IsBooked = {
-  RequestedOn: Scalars['String'];
-  StartTime: Scalars['String'];
-  EndTime: Scalars['String'];
-  BookingPitch: Scalars['Float'];
 };
 
 export type Booking = {
@@ -373,6 +375,19 @@ export type RegisterMutation = (
   ) }
 );
 
+export type IsBookedBoolNewQueryVariables = Exact<{
+  StartTime: Scalars['String'];
+  EndTime: Scalars['String'];
+  sportpitchid: Scalars['Int'];
+  RequestedOn: Scalars['String'];
+}>;
+
+
+export type IsBookedBoolNewQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'isBookedBoolNew'>
+);
+
 export type ListSpecificBookingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -441,6 +456,16 @@ export type SearchPitchQuery = (
     { __typename?: 'SportPitch' }
     & Pick<SportPitch, 'name' | 'StartTime' | 'EndTime' | 'pricePerHour'>
   ) }
+);
+
+export type TotalOpenQueryVariables = Exact<{
+  ID: Scalars['Int'];
+}>;
+
+
+export type TotalOpenQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'totalOpen'>
 );
 
 export const RegularErrorFragmentDoc = gql`
@@ -562,6 +587,20 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const IsBookedBoolNewDocument = gql`
+    query isBookedBoolNew($StartTime: String!, $EndTime: String!, $sportpitchid: Int!, $RequestedOn: String!) {
+  isBookedBoolNew(
+    StartTime: $StartTime
+    EndTime: $EndTime
+    sportpitchid: $sportpitchid
+    RequestedOn: $RequestedOn
+  )
+}
+    `;
+
+export function useIsBookedBoolNewQuery(options: Omit<Urql.UseQueryArgs<IsBookedBoolNewQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<IsBookedBoolNewQuery>({ query: IsBookedBoolNewDocument, ...options });
+};
 export const ListSpecificBookingsDocument = gql`
     query listSpecificBookings {
   listSpecificBookings {
@@ -639,4 +678,13 @@ export const SearchPitchDocument = gql`
 
 export function useSearchPitchQuery(options: Omit<Urql.UseQueryArgs<SearchPitchQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<SearchPitchQuery>({ query: SearchPitchDocument, ...options });
+};
+export const TotalOpenDocument = gql`
+    query totalOpen($ID: Int!) {
+  totalOpen(ID: $ID)
+}
+    `;
+
+export function useTotalOpenQuery(options: Omit<Urql.UseQueryArgs<TotalOpenQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<TotalOpenQuery>({ query: TotalOpenDocument, ...options });
 };

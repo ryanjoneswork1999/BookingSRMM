@@ -1,0 +1,3 @@
+query totalOpen($ID: Int!):Number{
+  totalOpen(ID: $ID)
+}
