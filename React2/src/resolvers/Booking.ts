@@ -27,6 +27,8 @@ import { Booking } from "../entites/Booking";
 import { UserHasBooking } from "../entites/UserHasBooking";
 import { validateBooking } from "../utils/validateBooking";
 import { isAuth } from "../middleware/isAuth";
+import { SportPitch } from "../entites/SportPitch";
+import moment from "moment";
 
 @ObjectType()
 class BookingResponse {
@@ -120,25 +122,71 @@ export class BookingResolver {
 
 
   @Query(() => Boolean)
-  async isBookedBoolNew(@Arg("StartTime", () => String) StartTime: String,@Arg("EndTime", () => String) EndTime: String,@Arg("sportpitchid", () => Int) sportpitchid: number,@Arg("RequestedOn", () => String) RequestedOn: String): Promise<Boolean | undefined> {
+  async isBookedBoolNew(@Arg("StartTime", () => String) StartTime: string,@Arg("EndTime", () => String) EndTime: string,@Arg("sportpitchid", () => Int) sportpitchid: number,@Arg("RequestedOn", () => String) RequestedOn: string): Promise<Boolean> {
    
-    console.log("StartTime"+StartTime)
-    console.log("EndTime"+EndTime)
+    let ans = false
+    if(StartTime ===undefined|| EndTime === undefined){
+      return false
+    }
+    let bok = await Booking.findOne({where:{StartTime, EndTime, sportpitchid, RequestedOn}})
 
-    const photoRepository = await getConnection().getRepository(Booking);
-    let booking = await photoRepository.findOne({
-      where: { StartTime, EndTime, sportpitchid, RequestedOn },
-    });
+    // const photoRepository = await getConnection().getRepository(Booking);
+    // let booking = await photoRepository.findOne({
+    //   where: { StartTime, EndTime, sportpitchid, RequestedOn },
+    // });
+    
+    if(undefined === bok || !bok){
+      return ans = false
+    }else if(bok!==undefined){
+      return ans =true
+    }
+    
+  return false
+    
+  }
 
-    console.log("Book"+booking);
+  @Query(() => [Boolean])
+  async isitbooked(@Arg("sportpitchid", () => Int) sportpitchid: number,@Arg("RequestedOn", () => String) RequestedOn: string): Promise<Boolean[]> {
+   
+    const total3: any[] = [];
+    //if(StartTime === null || EndTime)
+    
+    let pitch = await SportPitch.findOne(sportpitchid)
+     
 
-    if (!booking) {
-      console.log("reached here false")
-      return false;
+    let time2 = Number(moment(pitch?.StartTime,"HH:mm:ss").format("H"))
+    let time3 = (moment(pitch?.StartTime,"HH:mm:ss").format("H"))
+    let time4 = (moment(pitch?.StartTime,"HH:mm:ss").format("H"))
+    let time = Number(moment(pitch?.EndTime,"HH:mm:ss").format("H"))
+
+    var total=(time-time2)
+
+    let sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+    let eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+
+    for(let i=0;i<total;i++){
+      let bok=undefined
+     eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+
+     bok = await Booking.findOne({where:{StartTime:sTime, EndTime:eTime, sportpitchid, RequestedOn}})
+      
+    if(bok){
+      total3[i] = true;
+      sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      
+    }else{
+
+      total3[i] = false;
+      sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+    }
+   // console.log(total3[i])
     }
 
-    return true;
+    return total3
+    
   }
+
+
 
   @Query(() => [Booking])
   async isBooked(@Arg("request") RequestedOn: string): Promise<Booking[]> {

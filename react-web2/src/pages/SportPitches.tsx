@@ -53,12 +53,11 @@ const SportPitch = () => {
           <Text mt={4}>{moment(p.StartTime,"hh:mm:ss").format("hh:mm:ss")}</Text>
           <Text mt={4}>Available From: {p.StartTime} - {p.EndTime}</Text>
           <Text mt={4} mb={4}> Price Per Hour: £{p.pricePerHour}</Text>
-          <NextLink href={{
-            pathname: '/create-booking',
-            query: { Pitch: p.id },
-          }}>
+          <NextLink href="/booking/[id]"
+            as={`/booking/${p.id}`}
+          >
       <Link ml='auto'>
-      <Button>Select</Button>
+      <Button as ={Link}>Select</Button>
       </Link >
       
       </NextLink>

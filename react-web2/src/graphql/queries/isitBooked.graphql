@@ -1,0 +1,3 @@
+query isitbooked($sportpitchid:Int!, $RequestedOn:String!){
+  isitbooked(sportpitchid:$sportpitchid, RequestedOn:$RequestedOn)
+}

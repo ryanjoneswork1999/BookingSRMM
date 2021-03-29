@@ -4,76 +4,93 @@ import moment from "moment";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import {
   useCreateBookingMutation,
+
   useIsBookedBoolNewQuery,
+
   useSearchPitchQuery,
-  useTotalOpenQuery,
+  useTotalOpenQuery
 } from "../generated/graphql";
 import { bookingFieldError } from "../utils/bookingFieldError";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isBooked } from "../utils/isBooked";
-import { UseIsAuth } from "../utils/useIsAuth";
+
 interface registerProps {}
 //import React  from 'react';
 
-const createBooking: React.FC<registerProps> = ({}) => {
+  const  createBooking: React.FC<registerProps> = ({}) => {
   const router = useRouter();
-  // UseIsAuth();
+   const val = Number(router.query.Pitch);
 
-  const val = Number(router.query.Pitch);
+   let time:any="", timeAhead:any="", time2:any="", time3:any, date:any=""
+   
+   const total3: any[] = [];
+   let it=0
 
-  const [ex] = useTotalOpenQuery({
-    variables: { ID: val },
-  });
+   const total4:any[]=[]
+   const total5:any[]=[]
 
-  let num = 0;
+  
 
   //Fetches sport pitch from url
   const [{ data, fetching }] = useSearchPitchQuery({
     variables: {
-      ID: val,
+      ID: Number(router.query.Pitch),
     },
   });
 
-  //  //returns error oo
-  //  if(!fetching && !data){
-  //   return <div>Error </div>
-  // }
 
-  let date = moment().format("DD/MM/YYYY");
+  const [ex] = useTotalOpenQuery({
+    variables: { ID: Number(router.query.Pitch)},
+  });
+  
+  if(!fetching && data !== undefined){
+
+    it = Number(ex.data?.totalOpen)
+    
+
+   date = moment().format("DD/MM/YYYY");
 
   //Converts pitches string into times to do conversions on
-  let time = moment(data?.searchPitch.StartTime, "HH:mm:ss").format("HH:mm:ss");
+   time = moment(data?.searchPitch.StartTime, "HH:mm:ss").format("HH:mm:ss");
 
-  let timeAhead = moment(data?.searchPitch.StartTime, "HH:mm:ss").format(
+   timeAhead = moment(data?.searchPitch.StartTime, "HH:mm:ss").format(
     "HH:mm:ss"
   );
 
-  let time2 = moment(data?.searchPitch.EndTime, "HH:mm:ss").format("HH:mm:ss");
+   time2 = moment(data?.searchPitch.EndTime, "HH:mm:ss").format("HH:mm:ss");
 
-  let time3 = moment(time2, "H").subtract(time, "h").format("H");
+   time3 = moment(time2, "H").subtract(time, "h").format("H");
 
-  const total3: any[] = [];
+  
 
+
+  let num = 0;
   if (!ex.fetching) {
-    num = Number(ex.data?.totalOpen);
-
+    
+    
     let i = 0;
 
-    while (i < num) {
+    while ( i < it) {
       timeAhead = moment(timeAhead, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      var ans
+      
+      ans = Boolean(isBooked(time,timeAhead,val,date))
+      
+      total3[i] = { ex: time, ex2: timeAhead, bol:ans};
 
-      total3[i] = { ex: time, ex2: timeAhead };
-
+      total4[i] = time
+      total5[i]=timeAhead
       time = moment(time, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
 
       i++;
     }
   }
+}
+  
 
   const [, createBookingNew] = useCreateBookingMutation();
   return (
@@ -101,8 +118,8 @@ const createBooking: React.FC<registerProps> = ({}) => {
           <Form>
             <Box w="100%">
               {total3.map((a) => (
-                <Button
-                  isDisabled={isBooked(a.ex, a.ex2, val, date)}
+                <Button key={a.id}
+                 
                   w="100%"
                   mb={2}
                 >
@@ -125,7 +142,7 @@ const createBooking: React.FC<registerProps> = ({}) => {
               </Text>
               <Text mt={4} mb={4}>
                 {" "}
-                Time: {ex.data?.totalOpen}
+                Time: {}
               </Text>
             </Box>
 
@@ -173,4 +190,5 @@ const createBooking: React.FC<registerProps> = ({}) => {
     </Layout>
   );
 };
-export default withUrqlClient(createUrqlClient, { ssr: true })(createBooking);
+export default withUrqlClient(createUrqlClient,{ ssr: true })(createBooking);
+  

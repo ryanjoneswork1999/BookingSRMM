@@ -42,6 +42,7 @@ export class Booking extends BaseEntity{
   statusid: number
 
   
+  
   @Field(type => SportPitch)
   @ManyToOne( () => SportPitch, sportPitch => sportPitch.bookingval,{
     eager:true,

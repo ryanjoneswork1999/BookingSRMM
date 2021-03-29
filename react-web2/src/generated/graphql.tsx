@@ -24,6 +24,7 @@ export type Query = {
   totalOpen: Scalars['Int'];
   searchPitch: SportPitch;
   isBookedBoolNew: Scalars['Boolean'];
+  isitbooked: Array<Scalars['Boolean']>;
   isBooked: Array<Booking>;
   listSpecificBookings: Array<UserHasBooking>;
   listUserBookings: Array<UserHasBooking>;
@@ -58,6 +59,12 @@ export type QueryIsBookedBoolNewArgs = {
   sportpitchid: Scalars['Int'];
   EndTime: Scalars['String'];
   StartTime: Scalars['String'];
+};
+
+
+export type QueryIsitbookedArgs = {
+  RequestedOn: Scalars['String'];
+  sportpitchid: Scalars['Int'];
 };
 
 
@@ -388,6 +395,17 @@ export type IsBookedBoolNewQuery = (
   & Pick<Query, 'isBookedBoolNew'>
 );
 
+export type IsitbookedQueryVariables = Exact<{
+  sportpitchid: Scalars['Int'];
+  RequestedOn: Scalars['String'];
+}>;
+
+
+export type IsitbookedQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'isitbooked'>
+);
+
 export type ListSpecificBookingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -600,6 +618,15 @@ export const IsBookedBoolNewDocument = gql`
 
 export function useIsBookedBoolNewQuery(options: Omit<Urql.UseQueryArgs<IsBookedBoolNewQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<IsBookedBoolNewQuery>({ query: IsBookedBoolNewDocument, ...options });
+};
+export const IsitbookedDocument = gql`
+    query isitbooked($sportpitchid: Int!, $RequestedOn: String!) {
+  isitbooked(sportpitchid: $sportpitchid, RequestedOn: $RequestedOn)
+}
+    `;
+
+export function useIsitbookedQuery(options: Omit<Urql.UseQueryArgs<IsitbookedQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<IsitbookedQuery>({ query: IsitbookedDocument, ...options });
 };
 export const ListSpecificBookingsDocument = gql`
     query listSpecificBookings {

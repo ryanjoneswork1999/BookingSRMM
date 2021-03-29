@@ -7,9 +7,10 @@ export const isBooked = (
   sportpitchid: number,
   RequestedOn: string
 ) => {
-    let ans:any
-  
-    const [{data}] = useIsBookedBoolNewQuery({
+  let ans: any;
+  let data;
+  useEffect(() => {
+    data = useIsBookedBoolNewQuery({
       variables: {
         StartTime: StartTime,
         EndTime: EndTime,
@@ -17,9 +18,11 @@ export const isBooked = (
         RequestedOn: RequestedOn,
       },
     });
-    ans = data?.isBookedBoolNew
-  
+  });
 
-  return ans
-  
+  if (data === undefined || !data) {
+    return false;
+  } else {
+    return (ans = data);
+  }
 };
