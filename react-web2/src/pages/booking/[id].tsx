@@ -3,36 +3,34 @@ import {
   Button,
   Flex,
   Heading,
-  Link,
-  Stack,
-  Text,
+  SimpleGrid,
+
+
 } from "@chakra-ui/react";
-import { Formik } from "formik";
 import moment from "moment";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { Layout } from "../../components/Layout";
 import {
+  useDatebookingsQuery,
   useIsitbookedQuery,
   useSearchPitchQuery,
-  useTotalOpenQuery,
+  
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { isBooked } from "../../utils/isBooked";
+import { UseIsAuth } from "../../utils/useIsAuth";
 
 const Booking = ({}) => {
+  UseIsAuth();
+    
   const router = useRouter();
   //Fetches sport pitch from url
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
   //if(intId != -1){
-  let time: any = "",
-    timeAhead: any = "",
-    time2: any = "",
-    time3: any,
-    date: any = "";
+  let date: any = "";
   //Fetches sport pitch from url
   const [{ data, fetching }] = useSearchPitchQuery({
     variables: {
@@ -40,9 +38,7 @@ const Booking = ({}) => {
     },
   });
 
-  const [ex] = useTotalOpenQuery({
-    variables: { ID: intId },
-  });
+  
   date = moment().format("DD/MM/YYYY");
 
   const [ex2] = useIsitbookedQuery({
@@ -52,35 +48,13 @@ const Booking = ({}) => {
     }
   })
 
-  let it = Number(ex.data?.totalOpen);
-
-  const total3: any[] = [];
-
-  //if(!ex.fetching && ex.data && data && !fetching) {
-
-
-
-  //Converts pitches string into times to do conversions on
-  time = moment(data?.searchPitch.StartTime, "HH:mm:ss").format("HH:mm:ss");
-
-  timeAhead = moment(data?.searchPitch.StartTime, "HH:mm:ss").format(
-    "HH:mm:ss"
-  );
-
-  time2 = moment(data?.searchPitch.EndTime, "HH:mm:ss").format("HH:mm:ss");
-
-  time3 = moment(time2, "H").subtract(time, "h").format("H");
-
-  
-   
-    for(let i=0;i< it;i++){
-    timeAhead = moment(timeAhead, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
-    
-    total3[i] = { ex: time, ex2: timeAhead, bol: ex2.data?.isitbooked[i] };
-
-    time = moment(time, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
-
+  const [datebok] = useDatebookingsQuery({
+    variables: {
+      sportpitchid:intId,
+      RequestedOn:date
     }
+  })
+
   
 
   return (
@@ -92,34 +66,43 @@ const Booking = ({}) => {
         <div>loading..</div>
       ) : (
 
-        <Flex align="center">
-          <Box width="100%">
-          {total3.map((a) => (
-                <Button key={a.id}
-                 isDisabled={a.bol}
-                  w="100%"
+      
+          <SimpleGrid columns={2} spacing={5}>
+
+            
+              <Box >
+          {datebok.data?.datebookings.map((a) => (
+                <Button
+                 bgColor={a.substring(13)}
+                 //color={a.bol ? "black" : "white"}
+                 w={"100%"}
                   mb={2}
                 >
-                  {a.ex} - {a.ex2}{" "}
+                  {a.substring(0,10)}
+                  
                 </Button>
               ))}
-          </Box>
-        <Stack width="100%" spacing={8}>
-          <Box p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
-            <Text mt={4}>Requested On: {data?.searchPitch.name}</Text>
-            <Text mt={4}>Start Time: {data?.searchPitch.StartTime}</Text>
-            <Text mt={4}> End Time: {data?.searchPitch.EndTime}</Text>
-            <Text mt={4} mb={4}>
-              {" "}
-              SportPitch: {data?.searchPitch.pricePerHour}
-            </Text>
-            <Text mt={4} mb={4}>
-              {" "}
-              Time: {ex.data?.totalOpen}
-            </Text>
-          </Box>
-        </Stack>
-        </Flex>
+            </Box>
+
+            <Box >
+          {ex2.data?.isitbooked.map((b) => (
+                <Button
+                bgColor={b.substring(19) ==="true" ? "red" : "green"}
+                 isDisabled={b.substring(19) === "true"}
+                 color={b.substring(19) ==="true" ? "black" : "white"}
+                  w={"100%"}
+                  mb={2}
+                >
+                  {b.substring(0,19)}
+            
+                </Button>
+              ))}
+              </Box>
+          
+          </SimpleGrid>
+        
+        
+       
       )}
       {data ? <Flex></Flex> : null}
       

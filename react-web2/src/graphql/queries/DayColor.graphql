@@ -1,0 +1,3 @@
+query datebookings($sportpitchid:Int!, $RequestedOn:String!){
+  datebookings(sportpitchid:$sportpitchid, RequestedOn:$RequestedOn)
+}

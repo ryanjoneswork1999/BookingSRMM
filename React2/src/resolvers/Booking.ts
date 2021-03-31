@@ -1,26 +1,15 @@
 import { MyContext } from "../types";
 import {
   Arg,
-
-
   Ctx,
-
-
-  Field, InputType,
-
-
-
-  Int, Mutation,
-
-
-
-
+  Field,
+  InputType,
+  Int,
+  Mutation,
   ObjectType,
-
-
-
-
-  Query, Resolver, UseMiddleware
+  Query,
+  Resolver,
+  UseMiddleware,
 } from "type-graphql";
 import { getConnection, PrimaryGeneratedColumn } from "typeorm";
 import { Booking } from "../entites/Booking";
@@ -50,8 +39,6 @@ class FieldErrors {
 
 @InputType()
 class bookingInput {
-
-
   @Field()
   RequestedOn: string;
 
@@ -86,16 +73,14 @@ class IsBooked {
 @Resolver()
 export class BookingResolver {
   @Mutation(() => UserHasBooking)
-  async createBookingUser(@Arg("bookingId", () => Int) bookingid: number,
-  @Ctx() { req }: MyContext
+  async createBookingUser(
+    @Arg("bookingId", () => Int) bookingid: number,
+    @Ctx() { req }: MyContext
   ) {
-
- 
-     return UserHasBooking.create({bookingid, userid:req.session.userId}).save()
-
-    
-    
-    
+    return UserHasBooking.create({
+      bookingid,
+      userid: req.session.userId,
+    }).save();
   }
 
   // @Query(() => Boolean)
@@ -120,73 +105,73 @@ export class BookingResolver {
   //   return true;
   // }
 
-
   @Query(() => Boolean)
-  async isBookedBoolNew(@Arg("StartTime", () => String) StartTime: string,@Arg("EndTime", () => String) EndTime: string,@Arg("sportpitchid", () => Int) sportpitchid: number,@Arg("RequestedOn", () => String) RequestedOn: string): Promise<Boolean> {
-   
-    let ans = false
-    if(StartTime ===undefined|| EndTime === undefined){
-      return false
+  async isBookedBoolNew(
+    @Arg("StartTime", () => String) StartTime: string,
+    @Arg("EndTime", () => String) EndTime: string,
+    @Arg("sportpitchid", () => Int) sportpitchid: number,
+    @Arg("RequestedOn", () => String) RequestedOn: string
+  ): Promise<Boolean> {
+    let ans = false;
+    if (StartTime === undefined || EndTime === undefined) {
+      return false;
     }
-    let bok = await Booking.findOne({where:{StartTime, EndTime, sportpitchid, RequestedOn}})
+    let bok = await Booking.findOne({
+      where: { StartTime, EndTime, sportpitchid, RequestedOn },
+    });
 
     // const photoRepository = await getConnection().getRepository(Booking);
     // let booking = await photoRepository.findOne({
     //   where: { StartTime, EndTime, sportpitchid, RequestedOn },
     // });
-    
-    if(undefined === bok || !bok){
-      return ans = false
-    }else if(bok!==undefined){
-      return ans =true
+
+    if (undefined === bok || !bok) {
+      return (ans = false);
+    } else if (bok !== undefined) {
+      return (ans = true);
     }
-    
-  return false
-    
+
+    return false;
   }
 
-  @Query(() => [Boolean])
-  async isitbooked(@Arg("sportpitchid", () => Int) sportpitchid: number,@Arg("RequestedOn", () => String) RequestedOn: string): Promise<Boolean[]> {
-   
+  @Query(() => [String])
+  async isitbooked(
+    @Arg("sportpitchid", () => Int) sportpitchid: number,
+    @Arg("RequestedOn", () => String) RequestedOn: string
+  ): Promise<String[]> {
     const total3: any[] = [];
     //if(StartTime === null || EndTime)
-    
-    let pitch = await SportPitch.findOne(sportpitchid)
-     
 
-    let time2 = Number(moment(pitch?.StartTime,"HH:mm:ss").format("H"))
-    let time3 = (moment(pitch?.StartTime,"HH:mm:ss").format("H"))
-    let time4 = (moment(pitch?.StartTime,"HH:mm:ss").format("H"))
-    let time = Number(moment(pitch?.EndTime,"HH:mm:ss").format("H"))
+    let pitch = await SportPitch.findOne(sportpitchid);
 
-    var total=(time-time2)
+    let time2 = Number(moment(pitch?.StartTime, "HH:mm:ss").format("H"));
+    let time = Number(moment(pitch?.EndTime, "HH:mm:ss").format("H"));
+
+    var total = time - time2;
 
     let sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
     let eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
 
-    for(let i=0;i<total;i++){
-      let bok=undefined
-     eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+    for (let i = 0; i < total; i++) {
+      let bok = undefined;
+      eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
 
-     bok = await Booking.findOne({where:{StartTime:sTime, EndTime:eTime, sportpitchid, RequestedOn}})
-      
-    if(bok){
-      total3[i] = true;
-      sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
-      
-    }else{
+      bok = await Booking.findOne({
+        where: { StartTime: sTime, EndTime: eTime, sportpitchid, RequestedOn },
+      });
 
-      total3[i] = false;
-      sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      if (bok) {
+        total3[i] = sTime + " - " + eTime+ true;
+        sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      } else {
+        total3[i] = sTime + " - " + eTime+ false;
+        sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      }
+      // console.log(total3[i])
     }
-   // console.log(total3[i])
-    }
 
-    return total3
-    
+    return total3;
   }
-
-
 
   @Query(() => [Booking])
   async isBooked(@Arg("request") RequestedOn: string): Promise<Booking[]> {
@@ -203,33 +188,35 @@ export class BookingResolver {
 
   @Mutation(() => BookingResponse)
   @UseMiddleware(isAuth)
-  async createBookingNew(@Arg("booking") booking: bookingInput,
-  @Ctx() { req }: MyContext):Promise<BookingResponse> {
-
+  async createBookingNew(
+    @Arg("booking") booking: bookingInput,
+    @Ctx() { req }: MyContext
+  ): Promise<BookingResponse> {
     const errors = validateBooking(booking);
 
     if (errors) {
       return { errors };
     }
 
-    let val1 = booking.RequestedOn
-    let val2 = booking.StartTime
-    let val3 = booking.EndTime
-    let val4 = booking.sportpitchid
+    let val1 = booking.RequestedOn;
+    let val2 = booking.StartTime;
+    let val3 = booking.EndTime;
+    let val4 = booking.sportpitchid;
 
-  let bool = await this.isBookedBoolNew(val2,val3,val4,val1)
+    let bool = await this.isBookedBoolNew(val2, val3, val4, val1);
 
-  
-  if(!bool){
-   const bookingk = Booking.create({ ...booking})
-   await bookingk.save();
-    
-   UserHasBooking.create({bookingid:bookingk.id,userid:req.session.userId}).save();
+    if (!bool) {
+      const bookingk = Booking.create({ ...booking });
+      await bookingk.save();
 
-   return {bookingk,
-   }
-  }
-  
+      UserHasBooking.create({
+        bookingid: bookingk.id,
+        userid: req.session.userId,
+      }).save();
+
+      return { bookingk };
+    }
+
     return {
       errors: [
         {
@@ -238,51 +225,31 @@ export class BookingResolver {
         },
       ],
     };
-  
-
-  // @Mutation(() => Booking)
-
-  // async createBooking(@Arg("booking") booking: bookingInput) {
-    
-  //  return Booking.create({ ...booking})
-   
-  
-   
-
-  
-  // }
   }
   @Query(() => [UserHasBooking])
   async listSpecificBookings(
     @Ctx() { req }: MyContext
-  ) :Promise<UserHasBooking[]>{
-    
-    
-
+  ): Promise<UserHasBooking[]> {
     let photoRepository = getConnection().getRepository(UserHasBooking);
-    let photos = await photoRepository.find({ relations: ["booking","user"] ,where:{userid: req.session.userId}});
+    let photos = await photoRepository.find({
+      relations: ["booking", "user"],
+      where: { userid: req.session.userId },
+    });
 
-    
-    console.log("Booking"+photos)
+    console.log("Booking" + photos);
 
-    return photos
-}
- 
+    return photos;
+  }
+
   @Query(() => [UserHasBooking])
-  async listUserBookings(
-    
-  ) :Promise<UserHasBooking[]>{
-    
-    
-
+  async listUserBookings(): Promise<UserHasBooking[]> {
     let photoRepository = getConnection().getRepository(UserHasBooking);
-    let photos = await photoRepository.find({ relations: ["booking","user"] });
+    let photos = await photoRepository.find({ relations: ["booking", "user"] });
 
-    
     //console.log(photos)
 
-    return photos
-}
+    return photos;
+  }
 
   @Query(() => [Booking])
   async listBookings(): Promise<Booking[]> {
@@ -297,17 +264,14 @@ export class BookingResolver {
     // const users = await user.find({ relations: ["sportPitchi"] });
 
     const photoRepository = getConnection().getRepository(Booking);
-    const photos = await photoRepository.find()
+    const photos = await photoRepository.find();
 
     return photos;
     // return users
   }
 
-
   @Query(() => [Booking])
-  async listBookingsByDate(
-    @Arg("Date") date: String
-  ): Promise<Booking[]> {
+  async listBookingsByDate(@Arg("Date") date: String): Promise<Booking[]> {
     // const qb = getConnection()
     //   .getRepository(Booking)
     //   .createQueryBuilder("booking")
@@ -319,10 +283,73 @@ export class BookingResolver {
     // const users = await user.find({ relations: ["sportPitchi"] });
 
     const photoRepository = getConnection().getRepository(Booking);
-    const photos = await photoRepository.find({where:{RequestedOn:date}})
+    const photos = await photoRepository.find({ where: { RequestedOn: date } });
 
     return photos;
     // returnusers
-  
-}
+  }
+
+  //Dates for booking
+  @Query(() => [String])
+  async datebookings(
+    @Arg("sportpitchid", () => Int) sportpitchid: number,
+    @Arg("RequestedOn", () => String) RequestedOn: string
+  ) {
+    const total3: any[] = [];
+    //if(StartTime === null || EndTime)
+
+    let pitch = await SportPitch.findOne(sportpitchid);
+
+    let date = RequestedOn;
+
+    let time2 = Number(moment(pitch?.StartTime, "HH:mm:ss").format("H"));
+    let time = Number(moment(pitch?.EndTime, "HH:mm:ss").format("H"));
+
+    var total = time - time2;
+
+    let sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+    let eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+
+    let count;
+    for (let p = 0; p < 7; p++) {
+      count = 0;
+      sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+      eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+      for (let i = 0; i < total; i++) {
+        let bok = undefined;
+        eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+
+        bok = await Booking.findOne({
+          where: {
+            StartTime: sTime,
+            EndTime: eTime,
+            sportpitchid,
+            RequestedOn: date,
+          },
+        });
+
+        if (bok) {
+          count++;
+          //total3[i] = true;
+          sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+        } else {
+          //total3[i] = false;
+          sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+        }
+        // console.log(total3[i])
+      }
+      if (count == 0) {
+        total3[p] = date + " - green";
+      } else if (count > 0 && count < total / 2) {
+        total3[p] = date + " - yellow";
+      } else if (count < total && count > total / 2) {
+        total3[p] = date + " - orange";
+      } else if (count == total) {
+        total3[p] = date + " - red";
+      }
+      date = moment(date, "DD/MM/YYYY").add(1, "d").format("DD/MM/YYYY");
+    }
+
+    return total3;
+  }
 }
