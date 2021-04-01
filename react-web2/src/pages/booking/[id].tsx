@@ -3,7 +3,10 @@ import {
   Button,
   Flex,
   Heading,
+  Link,
+  
   SimpleGrid,
+  Stack,
 
 
 } from "@chakra-ui/react";
@@ -20,6 +23,7 @@ import {
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { UseIsAuth } from "../../utils/useIsAuth";
+import NextLink from 'next/link';
 
 const Booking = ({}) => {
   UseIsAuth();
@@ -41,6 +45,12 @@ const Booking = ({}) => {
   
   date = moment().format("DD/MM/YYYY");
 
+  // const [ex2] = useIsitbookedQuery({
+  //   variables:{
+  //   sportpitchid:intId,
+  //   RequestedOn:date
+  //   }
+  // })
   const [ex2] = useIsitbookedQuery({
     variables:{
     sportpitchid:intId,
@@ -48,6 +58,7 @@ const Booking = ({}) => {
     }
   })
 
+  
   const [datebok] = useDatebookingsQuery({
     variables: {
       sportpitchid:intId,
@@ -66,40 +77,85 @@ const Booking = ({}) => {
         <div>loading..</div>
       ) : (
 
-      
-          <SimpleGrid columns={2} spacing={5}>
+        <SimpleGrid columns={2} spacing={5}>
 
+            <Box w={"100%"}>
             
-              <Box >
           {datebok.data?.datebookings.map((a) => (
-                <Button
-                 bgColor={a.substring(13)}
-                 //color={a.bol ? "black" : "white"}
-                 w={"100%"}
-                  mb={2}
-                >
-                  {a.substring(0,10)}
-                  
-                </Button>
-              ))}
-            </Box>
-
-            <Box >
-          {ex2.data?.isitbooked.map((b) => (
-                <Button
-                bgColor={b.substring(19) ==="true" ? "red" : "green"}
-                 isDisabled={b.substring(19) === "true"}
-                 color={b.substring(19) ==="true" ? "black" : "white"}
-                  w={"100%"}
-                  mb={2}
-                >
-                  {b.substring(0,19)}
+          // <Box p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
+          <NextLink href="/bookingdates/[id]/[date] "
+                 as={`/bookingdates/${intId}/${moment(a.substring(0,10),"DD/MM/YYYY").format("DDMMYYYY")}`}
+          >
+      <Link ml='auto'>
+      <Button
+            as ={Link}
+             bgColor={a.substring(13)}
+             //color={a.bol ? "black" : "white"}
+             w={"100%"}
+              mb={2}
+            >
+              {intId}
+              {a.substring(0,10)}
+              
+            </Button>
+      </Link >
+      
+      </NextLink>
+        /* </Box> */
             
-                </Button>
-              ))}
-              </Box>
+            
+            ))}
+             </Box >  
+            </SimpleGrid>
           
-          </SimpleGrid>
+            
+
+
+
+          
+
+                
+               
+          // {datebok.data?.datebookings.map((a) => (
+
+          //   <Box>
+           
+           
+          //   <Button
+          //   as ={Link}
+          //    bgColor={a.substring(13)}
+          //    //color={a.bol ? "black" : "white"}
+          //    w={"100%"}
+          //     mb={2}
+          //   >
+          //     {a.substring(0,10)}
+              
+          //   </Button>
+          //    <NextLink href="/[id][date]"
+          //           as={`/${intId}&${a.substring(0,10)}`}
+          // ></NextLink> 
+          //     </Box>
+          //     ))}
+            
+          //   </Box>
+          //   <Box >
+
+          //     Date:{date}
+          // {ex2.data?.isitbooked.map((b) => (
+          //       <Button //onSubmit={async}
+          //       bgColor={b.substring(19) ==="true" ? "red" : "green"}
+          //        isDisabled={b.substring(19) === "true"}
+          //        color={b.substring(19) ==="true" ? "black" : "white"}
+          //         w={"100%"}
+          //         mb={2}
+          //       >
+          //         {b.substring(0,19)}
+            
+          //       </Button>
+          //     ))}
+          //     </Box>
+          
+         
         
         
        
