@@ -340,7 +340,7 @@ export class BookingResolver {
       }
       if (count == 0) {
         total3[p] = date + " - green";
-      } else if (count > 0 && count < total / 2) {
+      } else if (count > 0 && count < total / 2 || count == (total/2)) {
         total3[p] = date + " - yellow";
       } else if (count < total && count > total / 2) {
         total3[p] = date + " - orange";
