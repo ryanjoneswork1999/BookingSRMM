@@ -102,10 +102,11 @@ return (
                 isClosable: true,
               })
             } else if (response.data?.createBookingNew.bookingk) {
+              let data = response.data.createBookingNew.bookingk
               //worked
               toast({
-                title: "Sucess",
-                description: "Booking has been successfully made",
+                title: "BookingID: "+data.id,
+                description: "Your booking has been successfully",
                 status: "success",
                 duration: 9000,
                 isClosable: true,
