@@ -2,7 +2,7 @@ import { cacheExchange } from "@urql/exchange-graphcache";
 import Router from "next/router";
 import { dedupExchange, Exchange, fetchExchange } from "urql";
 import { pipe, tap } from 'wonka';
-import { LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation } from "../generated/graphql";
+import { CreateBookingMutation, IsitbookedDocument, IsitbookedQuery, LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
 const errorExchange: Exchange = ({ forward }) => ops$ => {
@@ -35,7 +35,7 @@ export const createUrqlClient = (ssrExchange:any) =>({
         
         
 
-          logout: (_result, args, cache, info) => {
+          logout: (_result, _args, cache, _info) => {
             betterUpdateQuery <LogoutMutation, MeQuery>(cache,
               {query:MeDocument},
               _result,
@@ -46,18 +46,35 @@ export const createUrqlClient = (ssrExchange:any) =>({
           },
 
           
-          createBookingNew:(_result, args, cache, info)=>{
+          // createBookingNew:(_result, _args, cache, _info)=>{
             
-            cache.inspectFields("Query")
-            cache.invalidate("Query","listSpecificBookings")
-
+          //   betterUpdateQuery<CreateBookingMutation, IsitbookedQuery>(
+          //     cache, {
+          //       query: IsitbookedDocument
+          //     },
+          //     _result,
+          //     (result, query)=>{
+          //       if(result.createBookingNew.errors){
+          //         return query
+          //       }else{
+          //         return{
+          //           return query:
+          //         }
+          //       }
+              
             
+          //   cache.inspectFields("Query")
+          //   cache.invalidate("Query","listSpecificBookings")
+          //   cache.invalidate("Query", "datebookings")
+          //   cache.invalidate("Query", "isitbooked")
+          //     }
+          //   )
            
-          },
+          // },
             
-         
+        
           
-          login: (_result, args, cache, info) => {
+          login: (_result, _args, cache, _info) => {
 
             
             
@@ -83,11 +100,12 @@ export const createUrqlClient = (ssrExchange:any) =>({
             cache.inspectFields("Query")
             cache.invalidate("Query","listSpecificBookings")
             
+            
           },
 
           
 
-          register: (_result, args, cache, info) => {
+          register: (_result, _args, cache, _info) => {
             betterUpdateQuery<RegisterMutation, MeQuery>(
               cache, {
                 query: MeDocument

@@ -8,6 +8,7 @@ import { useCreateBookingMutation, useSearchPitchQuery } from "../../../../gener
 import { createUrqlClient } from "../../../../utils/createUrqlClient";
 import { UseIsAuth } from "../../../../utils/useIsAuth";
 import NextLink from "next/link";
+
 const bookingsummary = ({}) => {
 
 UseIsAuth();
@@ -47,7 +48,7 @@ return (
     <Box maxW="lg" borderWidth="2px" rounded="lg" alignContent="center" overflow="hidden">
     <Box p="6">
         <Box d="flex" alignItems="baseline">
-          <Badge rounded="full" px="4" variantColor="teal">
+          <Badge rounded="full" px="4" color="teal">
             Booking Details: 
           </Badge>
           <Box
@@ -93,7 +94,9 @@ return (
             const response = await createBookingNew({ booking:{RequestedOn:date1,StartTime:sTime, EndTime: eTime, sportpitchid:intId, statusid:1} });
             
             if (response.data?.createBookingNew.errors) {
+              
              let [data] = response.data.createBookingNew.errors
+             
               toast({
                 title: "Error booking unsuccessful",
                 description: (data.message),
@@ -101,6 +104,8 @@ return (
                 duration: 9000,
                 isClosable: true,
               })
+              
+              router.back()
             } else if (response.data?.createBookingNew.bookingk) {
               let data = response.data.createBookingNew.bookingk
               //worked
@@ -112,7 +117,7 @@ return (
                 isClosable: true,
               }),5000
 
-              router.push("/UserBookings");
+             // router.push("/UserBookings");
             }
           }}
           

@@ -9,7 +9,7 @@ const [{data, fetching}] = useMeQuery();
 
   useEffect(() =>{
     if(!fetching && !data?.me){
-      router.replace("/login?next="+router.pathname);
+      router.replace("/login?next="+ router.asPath);
     }
   }, [fetching ,data,router])
 }

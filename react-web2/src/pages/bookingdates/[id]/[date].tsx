@@ -8,6 +8,7 @@ import {
   SimpleGrid,
   useDisclosure
 } from "@chakra-ui/react";
+
 import moment from "moment";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
@@ -24,10 +25,27 @@ import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { UseIsAuth } from "../../../utils/useIsAuth";
 
 const datebookings = ({}) => {
+
   UseIsAuth();
 
+  
+  
+  
+
   const router = useRouter();
+  
+ // router.beforePopState
+  React.useEffect(()=>{
+    window.addEventListener('popstate', (event) => {
+      //console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+      router.reload()
+    });
+    
+  })
   //Fetches sport pitch from url
+
+
+
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
