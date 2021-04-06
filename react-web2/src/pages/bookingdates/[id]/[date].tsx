@@ -97,21 +97,22 @@ const datebookings = ({}) => {
   return (
     <Layout>
       <Flex align="center">
-        <Heading>Sport Pitches</Heading>
+        <Heading>Booking Dates & Times <br></br> </Heading>
       </Flex>
       {!data && fetching ? (
         <div>loading..</div>
       ) : (
+        
         <SimpleGrid columns={2} spacing={5}>
           <Box w={"100%"}>
             {datebok.data?.datebookings.map((a) => (
               // <Box p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
               <NextLink
                 href="/bookingdates/[id]/[date]"
-                as={`/bookingdates/${intId}/${moment(
+                as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(
                   a.substring(0, 10),
                   "DD/MM/YYYY"
-                ).format("DDMMYYYY")}`}
+                ).format("DD/MM/YYYY"))}`}
               >
                 <Link ml="auto">
                   <Button
@@ -134,10 +135,10 @@ const datebookings = ({}) => {
               <NextLink
               
               href="/bookingsummary/[id]/[date]/[time]"
-              as={`/bookingsummary/${intId}/${moment(
+              as={`/bookingsummary/${encodeURIComponent(intId)}/${encodeURIComponent(moment(
                 date1,
                 "DD/MM/YYYY"
-              ).format("DDMMYYYY")}/${moment(b.substring(0,8),"HH:mm:ss").format("HHmmss")+moment(b.substring(11,19),"HH:mm:ss").format("HHmmss")}`}
+              ).format("DD/MM/YYYY"))}/${encodeURIComponent((b.substring(0,8)))+ encodeURIComponent((b.substring(11,19)))}`}
             >
               <Link isDisabled={b.substring(19) === "true"}>
                 <Button 

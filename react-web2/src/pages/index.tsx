@@ -17,6 +17,7 @@ const Index = () => {
   if(!fetching && !data){
     return <div>no posts</div>
   }
+  console.log(encodeURIComponent("Thisisatest"))
   return (
     <Layout>
       <Flex align='center'> 

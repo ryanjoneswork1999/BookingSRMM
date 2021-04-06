@@ -17,7 +17,7 @@ const SportPitch = () => {
     
     });
   
-    
+    console.log(encodeURIComponent(date))
     if(!fetching && !data){
       return <div>no posts</div>
     }
@@ -47,8 +47,9 @@ const SportPitch = () => {
           <Text mt={4}>Available From: {p.StartTime} - {p.EndTime}</Text>
           <Text mt={4} mb={4}> Price Per Hour: £{p.pricePerHour}</Text>
           <NextLink href="/bookingdates/[id]/[date] "
-                 as={`/bookingdates/${p.id}/${moment(date,"DD/MM/YYYY").format("DDMMYYYY")}`}
+                 as={`/bookingdates/${encodeURIComponent(p.id)}/${encodeURIComponent( moment(date,"DD/MM/YYYY").format("DD/MM/YYYY"))}`}
           >
+            
       <Link ml='auto'>
       <Button as ={Link}>Select</Button>
       </Link >

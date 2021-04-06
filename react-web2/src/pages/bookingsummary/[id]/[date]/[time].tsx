@@ -22,7 +22,7 @@ UseIsAuth();
 
   const datecho =
     typeof router.query.date === "string"
-      ? String(router.query.date)
+      ? String(decodeURIComponent( router.query.date))
       : moment().format("DD/MM/YYYY");
 
       let date1 = moment(datecho, "DDMMYYYY").format("DD/MM/YYYY");
@@ -38,8 +38,8 @@ UseIsAuth();
         },
       });
 
-    let sTime = moment(time.substring(0,6),"HHmmss").format("HH:mm:ss")
-    let eTime = moment(time.substring(6,12),"HHmmss").format("HH:mm:ss")
+    let sTime = moment(time.substring(0,7),"HHmmss").format("HH:mm:ss")
+    let eTime = moment(time.substring(8,16),"HHmmss").format("HH:mm:ss")
     const toast = useToast()
     const [, createBookingNew] = useCreateBookingMutation();
 return (
