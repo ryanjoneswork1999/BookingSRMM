@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Link,  useToast } from "@chakra-ui/react";
+import { Badge, Box, Button, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
@@ -7,7 +7,6 @@ import { Layout } from "../../../../components/Layout";
 import { useCreateBookingMutation, useSearchPitchQuery } from "../../../../generated/graphql";
 import { createUrqlClient } from "../../../../utils/createUrqlClient";
 import { UseIsAuth } from "../../../../utils/useIsAuth";
-import NextLink from "next/link";
 
 const bookingsummary = ({}) => {
 
@@ -33,7 +32,7 @@ UseIsAuth();
       ? String(router.query.time)
       : "-1"
 
-      const [{ data, fetching }] = useSearchPitchQuery({
+      const [{ data }] = useSearchPitchQuery({
         variables: {
           ID: intId,
         },
@@ -72,22 +71,21 @@ return (
     
         </Box>
         <Box d={"flex"} align="center" m={5}>
-        <NextLink
+       
               
-              href="/bookingdates/[id]/[date]"
-              as={`/bookingdates/${intId}/${moment(
-                date1,
-                "DD/MM/YYYY"
-              ).format("DDMMYYYY")}`}
-            >
-              <Link>
+              
+              
           <Button 
-          as={Link}
+        onClick={async()=>{
+          {router.back()}
+        }
+          }
+          
           >
             Back
           </Button>
-          </Link>
-          </NextLink>
+          
+          
           
           <Button ml={"auto"} 
           onClick={async () => {
@@ -117,7 +115,7 @@ return (
                 isClosable: true,
               }),5000
 
-             // router.push("/UserBookings");
+             router.push("/UserBookings");
             }
           }}
           

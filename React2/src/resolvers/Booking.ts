@@ -151,22 +151,63 @@ export class BookingResolver {
 
     let sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
     let eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+    
+    const bookingRep = getConnection().getRepository(Booking)
+      
+    const BOKO= await (Booking).find({where:{ RequestedOn,sportpitchid}})
 
+    console.log("sfsdfdsfsdf"+( (await BOKO).map((b) =>(
+      b.StartTime
+    ))))
+    let val = await bookingRep.find({ 
+      select:["RequestedOn","StartTime","EndTime","sportpitchid"],where:{
+          RequestedOn,sportpitchid
+      }})
+      
+ 
+    
+      
+    //   {select:["RequestedOn","StartTime","EndTime","sportpitchid"],where:{
+    //   RequestedOn
+    // }});
+      
+    if (await val.length ==0){
+      for (let i = 0; i < total; i++) {
+        eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+        total3[i] = sTime + " - " + eTime+ false;
+
+        sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      
+      }
+      return total3
+    }
+    
     for (let i = 0; i < total; i++) {
       let bok = undefined;
       eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
 
-      bok = await Booking.findOne({
-        where: { StartTime: sTime, EndTime: eTime, sportpitchid, RequestedOn },
-      });
-
-      if (bok) {
-        total3[i] = sTime + " - " + eTime+ true;
-        sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
-      } else {
-        total3[i] = sTime + " - " + eTime+ false;
-        sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      for(let j = 0; j < BOKO.length; j++){
+        if(BOKO[j].StartTime==sTime && BOKO[j].EndTime===eTime){
+          total3[i] = sTime + " - " + eTime+ true;
+          break;
+        }else{
+          total3[i] = sTime + " - " + eTime+ false;
+        }
+       
       }
+      sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+
+      // bok = await bookingRep.findOne({
+      //  where: {StartTime:sTime, EndTime:eTime, sportpitchid, RequestedOn}
+      // });
+
+      // if (bok) {
+      //   total3[i] = sTime + " - " + eTime+ true;
+      //   sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      // } else {
+      //   total3[i] = sTime + " - " + eTime+ false;
+      //   sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+      // }
       // console.log(total3[i])
     }
 
@@ -289,12 +330,78 @@ export class BookingResolver {
     // returnusers
   }
 
-  //Dates for booking
+//  // Dates for booking
+//   @Query(() => [String])
+//   async datebookings(
+//     @Arg("sportpitchid", () => Int) sportpitchid: number,
+//     @Arg("RequestedOn", () => String) RequestedOn: string
+//   ) {
+//     console.time("START")
+//     const total3: any[] = [];
+//     //if(StartTime === null || EndTime)
+
+//     let pitch = await SportPitch.findOne(sportpitchid);
+
+//     let date = RequestedOn;
+
+//     let time2 = Number(moment(pitch?.StartTime, "HH:mm:ss").format("H"));
+//     let time = Number(moment(pitch?.EndTime, "HH:mm:ss").format("H"));
+
+//     var total = time - time2;
+
+//     let sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+//     let eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+
+//     let count;
+//     for (let p = 0; p < 7; p++) {
+//       count = 0;
+//       sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+//       eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
+//       for (let i = 0; i < total; i++) {
+//         let bok = undefined;
+//         eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+
+//         bok = await Booking.findOne({
+//           where: {
+//             StartTime: sTime,
+//             EndTime: eTime,
+//             sportpitchid,
+//             RequestedOn: date,
+//           },
+//         });
+
+//         if (bok) {
+//           count++;
+//           //total3[i] = true;
+//           sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+//         } else {
+//           //total3[i] = false;
+//           sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+//         }
+//         // console.log(total3[i])
+//       }
+//       if (count == 0) {
+//         total3[p] = date + " - green";
+//       } else if (count > 0 && count < total / 2 || count == (total/2)) {
+//         total3[p] = date + " - yellow";
+//       } else if (count < total && count > total / 2) {
+//         total3[p] = date + " - orange";
+//       } else if (count == total) {
+//         total3[p] = date + " - red";
+//       }
+//       date = moment(date, "DD/MM/YYYY").add(1, "d").format("DD/MM/YYYY");
+//     }
+//     console.timeEnd("START")
+//     return total3;
+//   }
+
   @Query(() => [String])
   async datebookings(
     @Arg("sportpitchid", () => Int) sportpitchid: number,
     @Arg("RequestedOn", () => String) RequestedOn: string
   ) {
+
+    console.time("START")
     const total3: any[] = [];
     //if(StartTime === null || EndTime)
 
@@ -312,32 +419,35 @@ export class BookingResolver {
 
     let count;
     for (let p = 0; p < 7; p++) {
+
+      
       count = 0;
+
+      
       sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
       eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
       for (let i = 0; i < total; i++) {
         let bok = undefined;
+
+        const BOKO= await (Booking).find({where:{ RequestedOn: date, sportpitchid}})
+
+        if(BOKO.length==0){
+          
+          count =0;
+          break;
+        }
+        
         eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
 
-        bok = await Booking.findOne({
-          where: {
-            StartTime: sTime,
-            EndTime: eTime,
-            sportpitchid,
-            RequestedOn: date,
-          },
-        });
-
-        if (bok) {
-          count++;
-          //total3[i] = true;
-          sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
-        } else {
-          //total3[i] = false;
-          sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+        for(let k = 0; k < BOKO.length; k++){
+          if(BOKO[k].StartTime===sTime && BOKO[k].EndTime===eTime){
+            count++
+          }
         }
-        // console.log(total3[i])
+        sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+       
       }
+
       if (count == 0) {
         total3[p] = date + " - green";
       } else if (count > 0 && count < total / 2 || count == (total/2)) {
@@ -349,7 +459,9 @@ export class BookingResolver {
       }
       date = moment(date, "DD/MM/YYYY").add(1, "d").format("DD/MM/YYYY");
     }
-
+    console.timeEnd("START")
     return total3;
   }
 }
+
+
