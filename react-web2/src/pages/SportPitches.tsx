@@ -46,8 +46,8 @@ const SportPitch = () => {
           <Text mt={4}>Name: {p.name}</Text>
           <Text mt={4}>Available From: {p.StartTime} - {p.EndTime}</Text>
           <Text mt={4} mb={4}> Price Per Hour: £{p.pricePerHour}</Text>
-          <NextLink href="/bookingdates/[id]/[date] "
-                 as={`/bookingdates/${encodeURIComponent(p.id)}/${encodeURIComponent( moment(date,"DD/MM/YYYY").format("DD/MM/YYYY"))}`}
+          <NextLink href="/bookingdates/[id]/[sDate]/[date] "
+                 as={`/bookingdates/${encodeURIComponent(p.id)}/${encodeURIComponent( moment(date,"DD/MM/YYYY").format("DD/MM/YYYY"))}/${encodeURIComponent( moment(date,"DD/MM/YYYY").format("DD/MM/YYYY"))}`}
           >
             
       <Link ml='auto'>

@@ -14,15 +14,15 @@ import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { Layout } from "../../../components/Layout";
+import { Layout } from "../../../../components/Layout";
 import {
   useCreateBookingMutation,
   useDatebookingsQuery,
   useIsitbookedQuery,
   useSearchPitchQuery
-} from "../../../generated/graphql";
-import { createUrqlClient } from "../../../utils/createUrqlClient";
-import { UseIsAuth } from "../../../utils/useIsAuth";
+} from "../../../../generated/graphql";
+import { createUrqlClient } from "../../../../utils/createUrqlClient";
+import { UseIsAuth } from "../../../../utils/useIsAuth";
 
 const datebookings = ({}) => {
 
@@ -54,6 +54,12 @@ const datebookings = ({}) => {
       ? String(router.query.date)
       : moment().format("DD/MM/YYYY");
 
+
+
+  const sDate =
+  typeof router.query.date === "string"
+    ? String(router.query.sDate)
+    : moment().format("DD/MM/YYYY");
   //if(intId != -1){
   let date1 = moment(datecho, "DDMMYYYY").format("DD/MM/YYYY");
   // let date: any = "";
@@ -65,9 +71,11 @@ const datebookings = ({}) => {
     },
   });
 
-  let date = moment().format("DD/MM/YYYY");
+  let tDate = moment().format("DD/MM/YYYY")
 
-  console.log(date);
+  let date = sDate
+
+  
   // const [ex2] = useIsitbookedQuery({
   //   variables:{
   //   sportpitchid:intId,
@@ -108,8 +116,8 @@ const datebookings = ({}) => {
             {datebok.data?.datebookings.map((a) => (
               // <Box p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
               <NextLink
-                href="/bookingdates/[id]/[date]"
-                as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(
+                href="/bookingdates/[id]/[sDate]/[date]"
+                as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(sDate)}/${encodeURIComponent(moment(
                   a.substring(0, 10),
                   "DD/MM/YYYY"
                 ).format("DD/MM/YYYY"))}`}
@@ -127,6 +135,40 @@ const datebookings = ({}) => {
                 </Link>
               </NextLink>
             ))}
+
+               
+            <NextLink href="/bookingdates/[id]/[sDate]/[date] "
+                 as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}`}
+          >
+            
+      <Link ml='auto' >
+      <Button 
+      
+      isDisabled={sDate === tDate ? false : true}
+      onClick={async()=>{
+                    {Link}
+                  }
+                    } >+7</Button>
+      </Link >
+      
+      </NextLink> 
+
+      {/* Second Button for taking away  */}
+      <NextLink href="/bookingdates/[id]/[sDate]/[date] "
+                 as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(date,"DD/MM/YYYY").subtract(7,"d").format("DD/MM/YYYY"))}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}`}
+          >
+            
+      <Link ml='auto' >
+      <Button 
+      
+      isDisabled={sDate === tDate ? true : false}
+      onClick={async()=>{
+                    {Link}
+                  }
+                    } >-7</Button>
+      </Link >
+      
+      </NextLink> 
           </Box>
 
           <Box>

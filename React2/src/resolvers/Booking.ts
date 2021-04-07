@@ -164,16 +164,22 @@ export class BookingResolver {
           RequestedOn,sportpitchid
       }})
       
- 
+      
+    let timeNow = moment().format("HH:mm:ss")
+    let DateNow = moment().format("DD/MM/YYYY")
     
       
-    //   {select:["RequestedOn","StartTime","EndTime","sportpitchid"],where:{
-    //   RequestedOn
-    // }});
       
     if (await val.length ==0){
-      for (let i = 0; i < total; i++) {
+      nothing: for (let i = 0; i < total; i++) {
         eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+        if(moment(sTime,"HH:mm:ss").subtract(30,"minutes").format("HH:mm:ss") <= moment(timeNow, "HH:mm:ss").format("HH:mm:ss") && RequestedOn===DateNow){
+          total3[i] = sTime + " - " + eTime+ true;
+          sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+          continue nothing
+
+        }
+        
         total3[i] = sTime + " - " + eTime+ false;
 
         sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
@@ -182,11 +188,25 @@ export class BookingResolver {
       return total3
     }
     
-    for (let i = 0; i < total; i++) {
+    
+
+    time: for (let i = 0; i < total; i++) {
       let bok = undefined;
+
+     
       eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
 
-      for(let j = 0; j < BOKO.length; j++){
+      if(moment(sTime,"HH:mm:ss").subtract(30,"minutes").format("HH:mm:ss") <= moment(timeNow, "HH:mm:ss").format("HH:mm:ss") && RequestedOn===DateNow){
+        console.log("INSIDE ")
+        total3[i] = sTime+" - " + eTime+true
+        sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+        continue time
+      }
+      
+      bookings:for(let j = 0; j < BOKO.length; j++){
+            console.log( await DateNow)
+        
+
         if(BOKO[j].StartTime==sTime && BOKO[j].EndTime===eTime){
           total3[i] = sTime + " - " + eTime+ true;
           break;
@@ -431,6 +451,7 @@ export class BookingResolver {
 
         const BOKO= await (Booking).find({where:{ RequestedOn: date, sportpitchid}})
 
+        
         if(BOKO.length==0){
           
           count =0;
