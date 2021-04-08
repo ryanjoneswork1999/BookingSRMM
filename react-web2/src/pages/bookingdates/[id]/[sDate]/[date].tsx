@@ -105,7 +105,7 @@ const datebookings = ({}) => {
   return (
     <Layout>
       <Flex align="center">
-        <Heading>Booking Dates & Times <br></br> </Heading>
+        <Heading>Booking Dates & Times - {datecho} <br></br> </Heading>
       </Flex>
       {!data && fetching ? (
         <div>loading..</div>
@@ -138,24 +138,8 @@ const datebookings = ({}) => {
 
                
             <NextLink href="/bookingdates/[id]/[sDate]/[date] "
-                 as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}`}
-          >
-            
-      <Link ml='auto' >
-      <Button 
-      
-      isDisabled={sDate === tDate ? false : true}
-      onClick={async()=>{
-                    {Link}
-                  }
-                    } >+7</Button>
-      </Link >
-      
-      </NextLink> 
-
-      {/* Second Button for taking away  */}
-      <NextLink href="/bookingdates/[id]/[sDate]/[date] "
-                 as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(date,"DD/MM/YYYY").subtract(7,"d").format("DD/MM/YYYY"))}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}`}
+            as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(date,"DD/MM/YYYY").subtract(7,"d").format("DD/MM/YYYY"))}/${encodeURIComponent(moment(date,"DD/MM/YYYY").subtract(7,"d").format("DD/MM/YYYY"))}`}
+                 
           >
             
       <Link ml='auto' >
@@ -166,6 +150,24 @@ const datebookings = ({}) => {
                     {Link}
                   }
                     } >-7</Button>
+      </Link >
+      
+      </NextLink> 
+
+      {/* Second Button for taking away  */}
+      <NextLink href="/bookingdates/[id]/[sDate]/[date] "
+                as={`/bookingdates/${encodeURIComponent(intId)}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}/${encodeURIComponent(moment(date,"DD/MM/YYYY").add(7,"d").format("DD/MM/YYYY"))}`}
+                 
+          >
+            
+      <Link ml='auto' >
+      <Button 
+      
+      isDisabled={sDate === tDate ? false : true}
+      onClick={async()=>{
+                    {Link}
+                  }
+                    } >+7</Button>
       </Link >
       
       </NextLink> 

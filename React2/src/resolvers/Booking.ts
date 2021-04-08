@@ -420,8 +420,9 @@ export class BookingResolver {
     @Arg("sportpitchid", () => Int) sportpitchid: number,
     @Arg("RequestedOn", () => String) RequestedOn: string
   ) {
-
-    console.time("START")
+    let timeNow = moment().format("HH:mm:ss")
+    let DateNow = moment().format("DD/MM/YYYY")
+    
     const total3: any[] = [];
     //if(StartTime === null || EndTime)
 
@@ -446,21 +447,36 @@ export class BookingResolver {
       
       sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
       eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
-      for (let i = 0; i < total; i++) {
+      time: for (let i = 0; i < total; i++) {
         let bok = undefined;
 
         const BOKO= await (Booking).find({where:{ RequestedOn: date, sportpitchid}})
 
-        
+        //if dates bookings is 0 then it will do the following + implements a way to account for times that have passed 
         if(BOKO.length==0){
-          
+          //If time has passed add to count and then add 1 to time so can increae 
+          if(moment(sTime,"HH:mm:ss").subtract(30,"minutes").format("HH:mm:ss") <= moment(timeNow, "HH:mm:ss").format("HH:mm:ss") && date===DateNow){
+            count++
+            sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+            eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+            continue time;
+          }else if(count ==0){
           count =0;
           break;
+          }
         }
         
         eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
 
+        if(moment(sTime,"HH:mm:ss").subtract(30,"minutes").format("HH:mm:ss") <= moment(timeNow, "HH:mm:ss").format("HH:mm:ss") && date===DateNow){
+          count++
+          sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+          eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+          continue time;
+        }
+
         for(let k = 0; k < BOKO.length; k++){
+          
           if(BOKO[k].StartTime===sTime && BOKO[k].EndTime===eTime){
             count++
           }
@@ -469,7 +485,7 @@ export class BookingResolver {
        
       }
 
-      if (count == 0) {
+      count:if (count == 0) {
         total3[p] = date + " - green";
       } else if (count > 0 && count < total / 2 || count == (total/2)) {
         total3[p] = date + " - yellow";
@@ -480,7 +496,7 @@ export class BookingResolver {
       }
       date = moment(date, "DD/MM/YYYY").add(1, "d").format("DD/MM/YYYY");
     }
-    console.timeEnd("START")
+    
     return total3;
   }
 }
