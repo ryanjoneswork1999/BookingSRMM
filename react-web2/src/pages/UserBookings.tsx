@@ -27,7 +27,7 @@ const UserBookings = () => {
         <Layout>
           <Flex align='center'> 
             <Heading>My Bookings Page</Heading>
-        <NextLink href="/create-booking">
+        <NextLink href="/SportPitches">
           <Link ml='auto'>
           create booking
           </Link >

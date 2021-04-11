@@ -17,9 +17,9 @@ const Index = () => {
   if(!fetching && !data){
     return <div>no posts</div>
   }
-  console.log(encodeURIComponent("Thisisatest"))
+ 
   return (
-    <Layout>
+    <Layout >
       <Flex align='center'> 
         <Heading>Ryans Page</Heading>
     <NextLink href="/create-post">

@@ -42,7 +42,7 @@ const SportPitch = () => {
                 
             {data!.listPitches.map((p) => (
               
-          <Box key={p.id} p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
+          <Box key={p.id} p={5}  shadow="md" borderWidth="2px">
           <Text mt={4}>Name: {p.name}</Text>
           <Text mt={4}>Available From: {p.StartTime} - {p.EndTime}</Text>
           <Text mt={4} mb={4}> Price Per Hour: £{p.pricePerHour}</Text>

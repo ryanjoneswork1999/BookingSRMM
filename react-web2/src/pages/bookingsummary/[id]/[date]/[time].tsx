@@ -1,4 +1,4 @@
-import { Badge, Box, Button, useToast } from "@chakra-ui/react";
+import { Badge, Box, Button, useColorMode, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
@@ -14,7 +14,10 @@ UseIsAuth();
 
 
   const router = useRouter();
+  const { colorMode } = useColorMode()
+  const bgColor = { light: 'gray.50', dark: 'gray.900' }
 
+  const color = { light: 'black', dark: 'white' }
   
   //Fetches sport pitch from url
   const intId =
@@ -47,11 +50,11 @@ return (
     <Box maxW="lg" borderWidth="2px" rounded="lg" alignContent="center" overflow="hidden">
     <Box p="6">
         <Box d="flex" alignItems="baseline">
-          <Badge rounded="full" px="4" color="teal">
+          <Badge rounded="full" color={color[colorMode]} px="4" >
             Booking Details: 
           </Badge>
           <Box
-            color="black"
+            color={color[colorMode]}
             fontWeight="semibold"
             letterSpacing="wide"
             fontSize="sm"

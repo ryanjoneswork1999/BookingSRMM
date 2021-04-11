@@ -1,5 +1,6 @@
-import { CSSReset, ThemeProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeProvider, CSSReset, ThemeProvider, useColorMode } from "@chakra-ui/react";
 import React from "react";
+import { Provider } from "urql";
 import theme from "../theme";
  
 
@@ -7,25 +8,36 @@ import theme from "../theme";
 
 
 function MyApp({ Component, pageProps }: any) {
-  return(
+
+  const { colorMode } = useColorMode()
+
+  const bgColor = { light: 'gray.50', dark: 'gray.900' }
+
+  const color = { light: 'black', dark: 'white' }
+  // return(
+  //   <ThemeProvider theme={theme}>
+
+  //     <CSSReset/>
+  //     <Component{...pageProps}/>
+  //   </ThemeProvider>
+  // )
+  return (
     <ThemeProvider theme={theme}>
-      <CSSReset/>
-      <Component{...pageProps}/>
-    </ThemeProvider>
-  )
-  // return (
-  //   <Provider value={client}>
-  //     <ChakraProvider resetCSS theme={theme}>
-  //       <ColorModeProvider
-  //         options={{
-  //           useSystemColorMode: true,
-  //         }}
-  //       >
-  //         <Component {...pageProps} />
-  //       </ColorModeProvider>
-  //     </ChakraProvider>
-  //   </Provider>
-  // );
+      <ChakraProvider resetCSS theme={theme}>
+        <ColorModeProvider
+        
+          options={{
+            useSystemColorMode: false,
+           initialColorMode:colorMode
+          }}
+        >
+          
+          <Component {...pageProps} />
+        </ColorModeProvider>
+        
+      </ChakraProvider>
+      </ThemeProvider>
+  );
 }
 
 export default MyApp;

@@ -6,6 +6,7 @@ import {
   Heading,
   Link,
   SimpleGrid,
+  useColorMode,
   useDisclosure
 } from "@chakra-ui/react";
 
@@ -75,6 +76,10 @@ const datebookings = ({}) => {
 
   let date = sDate
 
+  const { colorMode } = useColorMode()
+  const bgColor = { light: 'gray.50', dark: 'gray.900' }
+
+  const color = { light: 'black', dark: 'white' }
   
   // const [ex2] = useIsitbookedQuery({
   //   variables:{
@@ -126,6 +131,7 @@ const datebookings = ({}) => {
                   <Button
                     as={Link}
                     bgColor={a.substring(13)}
+                    color={color[colorMode]}
                     //color={a.bol ? "black" : "white"}
                     w={"100%"}
                     mb={2}
@@ -194,7 +200,8 @@ const datebookings = ({}) => {
                     }
                   bgColor={b.substring(19) === "true" ? "red" : "green"}
                   
-                  color={b.substring(19) === "true" ? "black" : "white"}
+                  // color={b.substring(19) === "true" ? "black" : "white"}
+                  color={color[colorMode]}
                   w={"100%"}
                   mb={2}
                 >
