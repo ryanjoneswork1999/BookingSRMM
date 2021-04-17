@@ -24,6 +24,7 @@ import { SportPitchResolver } from "./resolvers/SportPitch";
 import { BookingStatusResolver } from "./resolvers/BookingStatus";
 import { BookingResolver } from "./resolvers/Booking";
 import { userBookingResolver } from "./resolvers/userBookings";
+import { AdminResolver } from "./resolvers/Admin";
 //import path from "path"
 //import { sendEmail } from "./utils/sendEmail";
 
@@ -84,7 +85,7 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       
-      resolvers: [ HelloResolver, PostResolver, UserResolver, SportPitchResolver,BookingStatusResolver,BookingResolver,userBookingResolver],
+      resolvers: [ HelloResolver, PostResolver, UserResolver, SportPitchResolver,BookingStatusResolver,BookingResolver, AdminResolver],
       validate: false,
     }),
 
