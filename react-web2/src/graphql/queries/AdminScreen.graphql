@@ -1,0 +1,3 @@
+query AdminScreen($RequestedOn:String!){
+  AdminScreen(RequestedOn:$RequestedOn)
+}

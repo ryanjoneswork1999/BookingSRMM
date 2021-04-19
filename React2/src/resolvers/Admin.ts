@@ -6,27 +6,7 @@ import { getConnection } from "typeorm";
 import e from "express";
 
 
-@ObjectType()
-class Data {
-  @Field(() => [[String]], { nullable: true })
-  Pitch?: [[String]]
-  
-  
-}
 
-@ObjectType()
-class Datap {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
-
-type DataPoint {
-  Pitch:[[String]]
-  Value:[[String]]
-}
 @Resolver()
 export class AdminResolver {
 
@@ -101,22 +81,22 @@ export class AdminResolver {
           eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
           
           for(let k=0; k<filterd.length;k++){
-            console.log("INSIDE GREEN ")
-            console.log(sTime + eTime)
+            
+            //console.log("STime:"+sTime + "Booking start time" +filterd[k].StartTime + filterd[k].EndTime + eTime)
             if(filterd[k].StartTime == sTime && filterd[k].EndTime == eTime){
+              
             // total3[i][j]+="green "+filterd[k].id
-            world_map_array[i][j]="green";
-             console.log("INSIDE EQUALS")
-            }else{
-              //total3[i][j]+="white "
-              world_map_array[i][j]="white";
+            world_map_array[i][j]="green - " + (await filterd[k].id);
+            sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
+            continue time
+             
             }
           }
-          
+          world_map_array[i][j]="white";
           sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
         }
       }
-      console.log(world_map_array)
+      
        
       return world_map_array
     }

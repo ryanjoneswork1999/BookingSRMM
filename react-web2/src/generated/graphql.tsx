@@ -31,6 +31,7 @@ export type Query = {
   listBookings: Array<Booking>;
   listBookingsByDate: Array<Booking>;
   datebookings: Array<Scalars['String']>;
+  AdminScreen: Array<Array<Scalars['String']>>;
 };
 
 
@@ -82,6 +83,11 @@ export type QueryListBookingsByDateArgs = {
 export type QueryDatebookingsArgs = {
   RequestedOn: Scalars['String'];
   sportpitchid: Scalars['Int'];
+};
+
+
+export type QueryAdminScreenArgs = {
+  RequestedOn: Scalars['String'];
 };
 
 export type Post = {
@@ -389,6 +395,16 @@ export type RegisterMutation = (
   ) }
 );
 
+export type AdminScreenQueryVariables = Exact<{
+  RequestedOn: Scalars['String'];
+}>;
+
+
+export type AdminScreenQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'AdminScreen'>
+);
+
 export type DatebookingsQueryVariables = Exact<{
   sportpitchid: Scalars['Int'];
   RequestedOn: Scalars['String'];
@@ -622,6 +638,15 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const AdminScreenDocument = gql`
+    query AdminScreen($RequestedOn: String!) {
+  AdminScreen(RequestedOn: $RequestedOn)
+}
+    `;
+
+export function useAdminScreenQuery(options: Omit<Urql.UseQueryArgs<AdminScreenQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<AdminScreenQuery>({ query: AdminScreenDocument, ...options });
 };
 export const DatebookingsDocument = gql`
     query datebookings($sportpitchid: Int!, $RequestedOn: String!) {

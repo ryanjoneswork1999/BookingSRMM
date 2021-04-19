@@ -1,4 +1,4 @@
-import { cacheExchange } from "@urql/exchange-graphcache";
+import { cacheExchange, query } from "@urql/exchange-graphcache";
 import Router from "next/router";
 import { dedupExchange, Exchange, fetchExchange } from "urql";
 import { pipe, tap } from 'wonka';
@@ -46,31 +46,22 @@ export const createUrqlClient = (ssrExchange:any) =>({
           },
 
           
-          // createBookingNew:(_result, _args, cache, _info)=>{
-            
-          //   betterUpdateQuery<CreateBookingMutation, IsitbookedQuery>(
-          //     cache, {
-          //       query: IsitbookedDocument
-          //     },
-          //     _result,
-          //     (result)=>{
-          //       if(result.createBookingNew.errors){
-          //         return 
-          //       }else{
-          //         return{
-                    
-          //         }
-          //       }
-              
-            
-          //   cache.inspectFields("Query")
-          //   cache.invalidate("Query","listSpecificBookings")
-          //   cache.invalidate("Query", "datebookings")
-          //   cache.invalidate("Query", "isitbooked")
-          //     }
-          //   )
+          createBookingNew:(_result, _args, cache, _info)=>{
+            // betterUpdateQuery <CreateBookingMutation, IsitbookedQuery>(cache,
+            //   {query:IsitbookedDocument},
+            //   _result,
+
+            //   ( ) => (return)
+            // )
+
            
-          // },
+           // cache.updateQuery()
+           cache.inspectFields("Query")
+           cache.invalidate("Query","listSpecificBookings")
+           cache.invalidate("Query", "datebookings")
+           cache.invalidate("Query", "isitbooked")
+           
+          },
             
         
           
