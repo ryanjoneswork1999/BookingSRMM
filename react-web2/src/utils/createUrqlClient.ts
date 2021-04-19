@@ -53,12 +53,12 @@ export const createUrqlClient = (ssrExchange:any) =>({
           //       query: IsitbookedDocument
           //     },
           //     _result,
-          //     (result, query)=>{
+          //     (result)=>{
           //       if(result.createBookingNew.errors){
-          //         return query
+          //         return 
           //       }else{
           //         return{
-          //           return query:
+                    
           //         }
           //       }
               
@@ -90,6 +90,8 @@ export const createUrqlClient = (ssrExchange:any) =>({
                 }else{
                   cache.inspectFields("Query")
                   cache.invalidate("Query","listSpecificBookings")
+                  cache.invalidate("Query", "datebookings")
+                  cache.invalidate("Query", "isitbooked")
                   return{
                     me: result.login.user
                   }
@@ -99,7 +101,8 @@ export const createUrqlClient = (ssrExchange:any) =>({
             
             cache.inspectFields("Query")
             cache.invalidate("Query","listSpecificBookings")
-            
+            cache.invalidate("Query", "datebookings")
+            cache.invalidate("Query", "isitbooked")
             
           },
 
