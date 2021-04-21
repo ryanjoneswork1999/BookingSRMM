@@ -1,9 +1,7 @@
 import moment from "moment";
+import { Arg, Query, Resolver } from "type-graphql";
 import { Booking } from "../entites/Booking";
 import { SportPitch } from "../entites/SportPitch";
-import { Arg, Field, Int, ObjectType, Query, Resolver } from "type-graphql";
-import { getConnection } from "typeorm";
-import e from "express";
 
 
 
@@ -15,12 +13,12 @@ export class AdminResolver {
       @Arg("RequestedOn", () => String) RequestedOn: string
     ): Promise<String[][]> {
 
-      const bookingRep = getConnection().getRepository(Booking)
+     
 
       const BOKO= await (Booking).find({where:{ RequestedOn}})
       let pitch = await SportPitch.find();
       var x_world_map_tiles = pitch.length;
-      var y_world_map_tiles = 20;
+      
       
     var world_map_array = new Array(x_world_map_tiles);
 //     for (let i=0; i<2; i++)//create a two dimensional array 
@@ -30,7 +28,7 @@ export class AdminResolver {
 
      
 
-      const total3: any[][] = [];
+      
       
       
 
@@ -56,12 +54,13 @@ export class AdminResolver {
         var total = time - time2;
         
         world_map_array[i]=new Array(total);
-
+         
+        world_map_array[i][0]=pitch[i]?.name
          filterd = await BOKO.filter(BOKO => BOKO.sportpitchid == pitch[i].id)
          console.log("Reached here")
         if(filterd.length==0){
           
-          for( let j = 0; j<await total ; j++){
+          for( let j = 1; j<=await total ; j++){
             //total3[i][j]=""
             world_map_array[i][j]="";
             world_map_array[i][j]="white";
@@ -76,7 +75,7 @@ export class AdminResolver {
         }
         
         console.log(filterd)
-        time:for( let j = 0; j<total ; j++){
+        time:for( let j = 1; j<=total ; j++){
           
           eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
           
@@ -86,7 +85,7 @@ export class AdminResolver {
             if(filterd[k].StartTime == sTime && filterd[k].EndTime == eTime){
               
             // total3[i][j]+="green "+filterd[k].id
-            world_map_array[i][j]="green - " + (await filterd[k].id);
+            world_map_array[i][j]="green - " + ((await filterd[k].userhasbooking.user).username);
             sTime = moment(sTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
             continue time
              
@@ -97,6 +96,7 @@ export class AdminResolver {
         }
       }
       
+      console.log(world_map_array)
        
       return world_map_array
     }

@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
-import { BaseEntity, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from "typeorm";
 import { Booking } from "./Booking";
 import { User } from "./User";
 
@@ -19,7 +19,7 @@ export class UserHasBooking extends BaseEntity{
   booking: Booking
 
   @Field(() => User)
-  @ManyToOne( () => User, user => user.usersBookings,{primary:true})
+  @ManyToOne( () => User, user => user.usersBookings,{primary:true,eager:true})
   @JoinColumn({name:"userid"})
   user: Promise<User>
 

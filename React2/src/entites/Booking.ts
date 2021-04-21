@@ -58,6 +58,6 @@ export class Booking extends BaseEntity{
   bookingStatus: Promise<BookingStatus>
 
   
-  @OneToOne(() => UserHasBooking, userHasBooking => userHasBooking.booking)
+  @OneToOne(() => UserHasBooking, userHasBooking => userHasBooking.booking,{eager:true})
   userhasbooking: UserHasBooking
 }
