@@ -1,3 +1,4 @@
+
 import { Flex, Grid, GridItem, Heading, Link } from "@chakra-ui/react";
 import moment from "moment";
 import { withUrqlClient } from "next-urql";
@@ -11,7 +12,9 @@ import { UseIsAuth } from "../utils/useIsAuth";
 
 const AdminScreen = () => {
 
-    
+  
+  
+
     UseIsAuth();
     
    //moment(time).add(1, 'hour')
@@ -66,6 +69,8 @@ const [{data:EX}] = useAdminScreenQuery({
  
 
     return (
+      
+
         <Layout>
           <Flex align='center'> 
             <Heading>My Bookings Page</Heading>
@@ -78,6 +83,8 @@ const [{data:EX}] = useAdminScreenQuery({
           {!data && fetching? (
             <div>loading..</div>
           ) : (
+
+
     //         <Stack spacing={8}>
 
                 
@@ -142,12 +149,14 @@ const [{data:EX}] = useAdminScreenQuery({
     )
     
 }
+
  
 </Grid>
 
+      
 
-    
 
+  
   </>
           )}
           {data ? <Flex >
@@ -157,5 +166,5 @@ const [{data:EX}] = useAdminScreenQuery({
       );
     };
 
-   
+    
     export default withUrqlClient(createUrqlClient)(AdminScreen);

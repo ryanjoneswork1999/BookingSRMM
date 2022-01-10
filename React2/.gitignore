@@ -1,2 +1,7 @@
 dist
 node_modules
+.env
+.env.production
+deploy.sh
+ormconfig.js
+.env.example

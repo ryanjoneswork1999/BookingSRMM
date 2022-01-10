@@ -9,7 +9,7 @@ import { Layout } from "../components/Layout";
 import {
   useCreateBookingMutation,
 
-  useIsBookedBoolNewQuery,
+
 
   useSearchPitchQuery,
   useTotalOpenQuery
@@ -25,7 +25,7 @@ interface registerProps {}
   const router = useRouter();
    const val = Number(router.query.Pitch);
 
-   let time:any="", timeAhead:any="", time2:any="", time3:any, date:any=""
+   let time:any="", timeAhead:any="", date:any=""
    
    const total3: any[] = [];
    let it=0
@@ -61,14 +61,14 @@ interface registerProps {}
     "HH:mm:ss"
   );
 
-   time2 = moment(data?.searchPitch.EndTime, "HH:mm:ss").format("HH:mm:ss");
 
-   time3 = moment(time2, "H").subtract(time, "h").format("H");
+
+
 
   
 
 
-  let num = 0;
+  
   if (!ex.fetching) {
     
     

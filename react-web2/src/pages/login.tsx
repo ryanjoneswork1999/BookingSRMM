@@ -46,6 +46,9 @@ import { toErrorMap } from "../utils/toErrorMap";
               />
             </Box>
             <Flex mt={2}>
+              <NextLink href="/register">
+                <Link mr={"auto"}>No Account?</Link>
+              </NextLink>
               <NextLink href="/forgot-password">
                 <Link ml={"auto"}>forgot password?</Link>
               </NextLink>

@@ -13,7 +13,8 @@ export class UserHasBooking extends BaseEntity{
   @PrimaryColumn()
   userid: number
 
-  @Field()
+
+  @Field( () => Booking)
   @OneToOne( () => Booking, bok => bok.userhasbooking,{primary:true})
   @JoinColumn({name: "bookingid"})
   booking: Booking

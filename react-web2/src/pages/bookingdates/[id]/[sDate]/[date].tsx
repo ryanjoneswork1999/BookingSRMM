@@ -7,7 +7,6 @@ import {
   Link,
   SimpleGrid,
   useColorMode,
-  useDisclosure
 } from "@chakra-ui/react";
 
 import moment from "moment";
@@ -17,7 +16,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Layout } from "../../../../components/Layout";
 import {
-  useCreateBookingMutation,
+
   useDatebookingsQuery,
   useIsitbookedQuery,
   useSearchPitchQuery
@@ -37,7 +36,7 @@ const datebookings = ({}) => {
   
  // router.beforePopState
   React.useEffect(()=>{
-    window.addEventListener('popstate', (event) => {
+    window.addEventListener('popstate', (_event) => {
       //console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
       router.reload()
     });
@@ -77,7 +76,7 @@ const datebookings = ({}) => {
   let date = sDate
 
   const { colorMode } = useColorMode()
-  const bgColor = { light: 'gray.50', dark: 'gray.900' }
+
 
   const color = { light: 'black', dark: 'white' }
   
@@ -106,7 +105,7 @@ const datebookings = ({}) => {
   });
 
 
-  const [, createBookingNew] = useCreateBookingMutation();
+ 
   return (
     <Layout>
       <Flex align="center">

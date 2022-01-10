@@ -14,6 +14,6 @@ export class BookingStatus extends BaseEntity{
   @Column()
   status!: string;
 
-  @OneToMany(() => Booking, booking => booking.bookingStatus)
+  @OneToMany(() => Booking, bok => bok.bookingStatus)
   bookerstatus: Booking
 }

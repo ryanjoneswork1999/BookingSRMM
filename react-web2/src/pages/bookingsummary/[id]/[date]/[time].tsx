@@ -15,7 +15,7 @@ UseIsAuth();
 
   const router = useRouter();
   const { colorMode } = useColorMode()
-  const bgColor = { light: 'gray.50', dark: 'gray.900' }
+  
 
   const color = { light: 'black', dark: 'white' }
   

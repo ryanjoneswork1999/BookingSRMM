@@ -42,7 +42,7 @@ const UserBookings = () => {
                 
             {data!.listSpecificBookings.map((p) => (
           
-          <Box key={p.booking.id} p={5} backgroundColor="lightgrey" shadow="md" borderWidth="2px">
+          <Box key={p.booking.id} p={5} borderWidth="2px">
           <Text mt={4}>Requested On: {p.booking.RequestedOn}</Text>
           <Text mt={4}>Start Time: {p.booking.StartTime}</Text>
           <Text mt={4}> End Time: {p.booking.EndTime}</Text>

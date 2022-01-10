@@ -11,7 +11,6 @@ export class Booking extends BaseEntity{
   @PrimaryGeneratedColumn()
   id!: number;
 
-  
 
   @Field(() => String)
   @CreateDateColumn()
@@ -43,14 +42,14 @@ export class Booking extends BaseEntity{
 
   
   
-  @Field(type => SportPitch)
+  @Field(_type => SportPitch)
   @ManyToOne( () => SportPitch, sportPitch => sportPitch.bookingval,{
     eager:true,
   })
   @JoinColumn({name:"sportpitchid"})
   sportPitchi: Promise<SportPitch>
 
-  @Field(type=>BookingStatus)
+  @Field(_type=>BookingStatus)
   @ManyToOne( () => BookingStatus, bookingStatus => bookingStatus.bookerstatus,{
     eager:true,
   })

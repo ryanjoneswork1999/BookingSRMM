@@ -11,7 +11,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { getConnection, PrimaryGeneratedColumn } from "typeorm";
+import { getConnection} from "typeorm";
 import { Booking } from "../entites/Booking";
 import { UserHasBooking } from "../entites/UserHasBooking";
 import { validateBooking } from "../utils/validateBooking";
@@ -55,20 +55,20 @@ class bookingInput {
   statusid: number;
 }
 
-@InputType()
-class IsBooked {
-  @Field()
-  RequestedOn: string;
+// @InputType()
+// class IsBooked {
+//   @Field()
+//   RequestedOn: string;
 
-  @Field()
-  StartTime: string;
+//   @Field()
+//   StartTime: string;
 
-  @Field()
-  EndTime: string;
+//   @Field()
+//   EndTime: string;
 
-  @Field()
-  BookingPitch: number;
-}
+//   @Field()
+//   BookingPitch: number;
+// }
 
 @Resolver()
 export class BookingResolver {
@@ -112,7 +112,7 @@ export class BookingResolver {
     @Arg("sportpitchid", () => Int) sportpitchid: number,
     @Arg("RequestedOn", () => String) RequestedOn: string
   ): Promise<Boolean> {
-    let ans = false;
+    //let ans = false;
     if (StartTime === undefined || EndTime === undefined) {
       return false;
     }
@@ -126,9 +126,9 @@ export class BookingResolver {
     // });
 
     if (undefined === bok || !bok) {
-      return (ans = false);
+      return (false);
     } else if (bok !== undefined) {
-      return (ans = true);
+      return (true);
     }
 
     return false;
@@ -191,7 +191,7 @@ export class BookingResolver {
     
 
     time: for (let i = 0; i < total; i++) {
-      let bok = undefined;
+      
 
      
       eTime = moment(eTime, "HH:mm:ss").add(1, "h").format("HH:mm:ss");
@@ -448,7 +448,7 @@ export class BookingResolver {
       sTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
       eTime = moment(pitch?.StartTime, "HH:mm:ss").format("HH:mm:ss");
       time: for (let i = 0; i < total; i++) {
-        let bok = undefined;
+        
 
         const BOKO= await (Booking).find({where:{ RequestedOn: date, sportpitchid}})
 

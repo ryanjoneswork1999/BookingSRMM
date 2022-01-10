@@ -1,4 +1,4 @@
-import { Box, useColorMode, useColorModeValue } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import React from "react";
 
 export type WrapperVariant = 'small' | 'regular'
@@ -9,7 +9,7 @@ interface WrapperProps {
 
 
 export const Wrapper: React.FC<WrapperProps> = ({ children, variant = "regular" }) => {
-  const { colorMode } = useColorMode()
+
 
   const bgColor = { light: 'gray.50', dark: 'gray.900' }
 

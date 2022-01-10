@@ -6,7 +6,7 @@ import {
   Link,
   
   SimpleGrid,
-  Stack,
+  
 
 
 } from "@chakra-ui/react";
@@ -17,7 +17,6 @@ import React from "react";
 import { Layout } from "../../components/Layout";
 import {
   useDatebookingsQuery,
-  useIsitbookedQuery,
   useSearchPitchQuery,
   
 } from "../../generated/graphql";
@@ -51,12 +50,12 @@ const Booking = ({}) => {
   //   RequestedOn:date
   //   }
   // })
-  const [ex2] = useIsitbookedQuery({
-    variables:{
-    sportpitchid:intId,
-    RequestedOn:date
-    }
-  })
+  // const [ex2] = useIsitbookedQuery({
+  //   variables:{
+  //   sportpitchid:intId,
+  //   RequestedOn:date
+  //   }
+  // })
 
   
   const [datebok] = useDatebookingsQuery({

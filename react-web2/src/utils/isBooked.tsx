@@ -7,7 +7,7 @@ export const isBooked = (
   sportpitchid: number,
   RequestedOn: string
 ) => {
-  let ans: any;
+
   let data;
   useEffect(() => {
     data = useIsBookedBoolNewQuery({
@@ -23,6 +23,6 @@ export const isBooked = (
   if (data === undefined || !data) {
     return false;
   } else {
-    return (ans = data);
+    return data
   }
 };
