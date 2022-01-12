@@ -1,5 +1,7 @@
 import { User } from "../entites/User";
 import { MyContext } from "../types";
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 import {
   Resolver,
   Mutation,
@@ -15,7 +17,7 @@ import argon2 from "argon2";
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 import { UserNamePasswordInput } from "./UserNamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
-import { sendEmail } from "../utils/sendEmail";
+//import { sendEmail } from "../utils/sendEmail";
 import { v4 } from "uuid";
 import { getConnection } from "typeorm";
 
@@ -113,11 +115,24 @@ export class UserResolver {
       "ex",
       1000 * 60 * 60 * 24 * 3
     ); //3days
-    await sendEmail(
-      email,
-      `<a href ="http://localhost:3000/change-password/${token}">reset password </a>`
-    );
+    let url=process.env.CORS_ORIGIN
+    const msg = {
+      to: email,
+      from: "rjones24@qub.ac.uk", // Use the email address or domain you verified above
+      subject: "Change Password",
+      html: `<a href ="${url}/change-password/${token}">reset password </a>`,
+    };
 
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error:any) => {
+        console.error(error);
+      });
+
+    
     return true;
   }
 

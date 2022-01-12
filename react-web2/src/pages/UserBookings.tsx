@@ -1,6 +1,5 @@
-import { Box, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading,  Stack, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import NextLink from 'next/link';
 import React from "react";
 import { Layout } from "../components/Layout";
 import { useListSpecificBookingsQuery } from "../generated/graphql";
@@ -27,19 +26,13 @@ const UserBookings = () => {
         <Layout>
           <Flex align='center'> 
             <Heading>My Bookings Page</Heading>
-        <NextLink href="/SportPitches">
-          <Link ml='auto'>
-          create booking
-          </Link >
-          </NextLink>
+        
           </Flex>
           {!data && fetching? (
             <div>loading..</div>
           ) : (
             <Stack spacing={8}>
 
-                
-                
             {data!.listSpecificBookings.map((p) => (
           
           <Box key={p.booking.id} p={5} borderWidth="2px">

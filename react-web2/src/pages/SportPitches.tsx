@@ -28,11 +28,6 @@ const SportPitch = () => {
         <Layout>
           <Flex align='center'> 
             <Heading>Sport Pitches</Heading>
-        <NextLink href="/create-booking">
-          <Link ml='auto'>
-          create booking
-          </Link >
-          </NextLink>
           </Flex>
           {!data && fetching? (
             <div>loading..</div>

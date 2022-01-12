@@ -8,7 +8,7 @@ export default class Document extends NextDocument{
         <Head />
         <body>
           {/* Make Color mode to persists when you refresh the page. */}
-          <ColorModeScript/>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />
         </body>

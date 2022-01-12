@@ -11,11 +11,9 @@ interface WrapperProps {
 export const Wrapper: React.FC<WrapperProps> = ({ children, variant = "regular" }) => {
 
 
-  const bgColor = { light: 'gray.50', dark: 'gray.900' }
 
-  const color = { light: 'black', dark: 'white' }
   return (
-    <Box mt={8} bg={bgColor} color={color} mx="auto" maxW={variant ==='regular' ? "800px" : "400px"} w="100%">
+    <Box mt={8}  h="100%" mx="auto" maxW={variant ==='regular' ? "800px" : "400px"} w="100%">
       {children}
     </Box>
   );
