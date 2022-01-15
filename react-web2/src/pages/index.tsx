@@ -1,19 +1,18 @@
 import React from "react";
-import { withUrqlClient } from "next-urql";
 import { usePostsQuery } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
 import { Box, Button, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import NextLink from 'next/link'
+import { withApollo } from "../utils/Apollo";
 
 const Index = () => {
-  const [{ data, fetching}] = usePostsQuery({
+  const { data, loading}= usePostsQuery({
     variables:{
       limit:10,
     }
   });
 
-  if(!fetching && !data){
+  if(!loading && !data){
     return <div>no posts</div>
   }
  
@@ -41,7 +40,7 @@ const Index = () => {
       
       </NextLink>
       </Flex>
-      {!data && fetching? (
+      {!data && loading? (
         <div>loading..</div>
       ) : (
         <Stack spacing={8}>
@@ -57,9 +56,9 @@ const Index = () => {
         </Stack>
       )}
       {data ? <Flex >
-    <Button isLoading={fetching} m='auto'my={8}>load more</Button>
+    <Button isLoading={loading} m='auto'my={8}>load more</Button>
     </Flex> : null}
     </Layout>
   );
 };
-export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
+export default withApollo ({ ssr: true })(Index);

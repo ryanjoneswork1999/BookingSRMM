@@ -1,10 +1,10 @@
-import gql from 'graphql-tag';
-import * as Urql from 'urql';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -12,6 +12,135 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+};
+
+export type Booking = {
+  __typename?: 'Booking';
+  id: Scalars['Float'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  RequestedOn: Scalars['String'];
+  StartTime: Scalars['String'];
+  EndTime: Scalars['String'];
+  sportpitchid: Scalars['Float'];
+  statusid: Scalars['Float'];
+  sportPitchi: SportPitch;
+  bookingStatus: BookingStatus;
+};
+
+export type BookingResponse = {
+  __typename?: 'BookingResponse';
+  errors?: Maybe<Array<FieldErrors>>;
+  bookingk?: Maybe<Booking>;
+};
+
+export type BookingStatus = {
+  __typename?: 'BookingStatus';
+  id: Scalars['Float'];
+  status: Scalars['String'];
+};
+
+export type FieldError = {
+  __typename?: 'FieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type FieldErrors = {
+  __typename?: 'FieldErrors';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createPost: Post;
+  updatePost?: Maybe<Post>;
+  deletePost: Scalars['Boolean'];
+  changePassword: UserResponse;
+  forgotPassword: Scalars['Boolean'];
+  register: UserResponse;
+  login: UserResponse;
+  logout: Scalars['Boolean'];
+  createSportPitch: SportPitch;
+  createBookingStatus: BookingStatus;
+  createBookingUser: UserHasBooking;
+  createBookingNew: BookingResponse;
+};
+
+
+export type MutationCreatePostArgs = {
+  input: PostInput;
+};
+
+
+export type MutationUpdatePostArgs = {
+  name?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
+};
+
+
+export type MutationDeletePostArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type MutationChangePasswordArgs = {
+  newPassword: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationRegisterArgs = {
+  options: UserNamePasswordInput;
+};
+
+
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationCreateSportPitchArgs = {
+  sportInput: SportInput;
+};
+
+
+export type MutationCreateBookingStatusArgs = {
+  bookingStatus: StatusInput;
+};
+
+
+export type MutationCreateBookingUserArgs = {
+  bookingId: Scalars['Int'];
+};
+
+
+export type MutationCreateBookingNewArgs = {
+  booking: BookingInput;
+};
+
+export type Post = {
+  __typename?: 'Post';
+  id: Scalars['Float'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  name: Scalars['String'];
+  text: Scalars['String'];
+  points: Scalars['Float'];
+  creatorId: Scalars['Float'];
+  textSnippet: Scalars['String'];
+};
+
+export type PostInput = {
+  name: Scalars['String'];
+  text: Scalars['String'];
 };
 
 export type Query = {
@@ -90,25 +219,11 @@ export type QueryAdminScreenArgs = {
   RequestedOn: Scalars['String'];
 };
 
-export type Post = {
-  __typename?: 'Post';
-  id: Scalars['Float'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
+export type SportInput = {
   name: Scalars['String'];
-  text: Scalars['String'];
-  points: Scalars['Float'];
-  creatorId: Scalars['Float'];
-  textSnippet: Scalars['String'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['Float'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
-  username: Scalars['String'];
-  email: Scalars['String'];
+  pricePerHour: Scalars['Float'];
+  StartTime: Scalars['String'];
+  EndTime: Scalars['String'];
 };
 
 export type SportPitch = {
@@ -121,24 +236,17 @@ export type SportPitch = {
   createdAt: Scalars['String'];
 };
 
-export type Booking = {
-  __typename?: 'Booking';
+export type StatusInput = {
+  status: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
   id: Scalars['Float'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  RequestedOn: Scalars['String'];
-  StartTime: Scalars['String'];
-  EndTime: Scalars['String'];
-  sportpitchid: Scalars['Float'];
-  statusid: Scalars['Float'];
-  sportPitchi: SportPitch;
-  bookingStatus: BookingStatus;
-};
-
-export type BookingStatus = {
-  __typename?: 'BookingStatus';
-  id: Scalars['Float'];
-  status: Scalars['String'];
+  username: Scalars['String'];
+  email: Scalars['String'];
 };
 
 export type UserHasBooking = {
@@ -148,124 +256,16 @@ export type UserHasBooking = {
   user: User;
 };
 
-export type Mutation = {
-  __typename?: 'Mutation';
-  createPost: Post;
-  updatePost?: Maybe<Post>;
-  deletePost: Scalars['Boolean'];
-  changePassword: UserResponse;
-  forgotPassword: Scalars['Boolean'];
-  register: UserResponse;
-  login: UserResponse;
-  logout: Scalars['Boolean'];
-  createSportPitch: SportPitch;
-  createBookingStatus: BookingStatus;
-  createBookingUser: UserHasBooking;
-  createBookingNew: BookingResponse;
-};
-
-
-export type MutationCreatePostArgs = {
-  input: PostInput;
-};
-
-
-export type MutationUpdatePostArgs = {
-  name?: Maybe<Scalars['String']>;
-  id: Scalars['Float'];
-};
-
-
-export type MutationDeletePostArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type MutationChangePasswordArgs = {
-  newPassword: Scalars['String'];
-  token: Scalars['String'];
-};
-
-
-export type MutationForgotPasswordArgs = {
-  email: Scalars['String'];
-};
-
-
-export type MutationRegisterArgs = {
-  options: UserNamePasswordInput;
-};
-
-
-export type MutationLoginArgs = {
-  password: Scalars['String'];
-  usernameOrEmail: Scalars['String'];
-};
-
-
-export type MutationCreateSportPitchArgs = {
-  sportInput: SportInput;
-};
-
-
-export type MutationCreateBookingStatusArgs = {
-  bookingStatus: StatusInput;
-};
-
-
-export type MutationCreateBookingUserArgs = {
-  bookingId: Scalars['Int'];
-};
-
-
-export type MutationCreateBookingNewArgs = {
-  booking: BookingInput;
-};
-
-export type PostInput = {
-  name: Scalars['String'];
-  text: Scalars['String'];
-};
-
-export type UserResponse = {
-  __typename?: 'UserResponse';
-  errors?: Maybe<Array<FieldError>>;
-  user?: Maybe<User>;
-};
-
-export type FieldError = {
-  __typename?: 'FieldError';
-  field: Scalars['String'];
-  message: Scalars['String'];
-};
-
 export type UserNamePasswordInput = {
   email: Scalars['String'];
   username: Scalars['String'];
   password: Scalars['String'];
 };
 
-export type SportInput = {
-  name: Scalars['String'];
-  pricePerHour: Scalars['Float'];
-  StartTime: Scalars['String'];
-  EndTime: Scalars['String'];
-};
-
-export type StatusInput = {
-  status: Scalars['String'];
-};
-
-export type BookingResponse = {
-  __typename?: 'BookingResponse';
-  errors?: Maybe<Array<FieldErrors>>;
-  bookingk?: Maybe<Booking>;
-};
-
-export type FieldErrors = {
-  __typename?: 'FieldErrors';
-  field: Scalars['String'];
-  message: Scalars['String'];
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  errors?: Maybe<Array<FieldError>>;
+  user?: Maybe<User>;
 };
 
 export type BookingInput = {
@@ -550,10 +550,33 @@ export const ChangePasswordDocument = gql`
   }
 }
     ${RegularUserResponseFragmentDoc}`;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
 
-export function useChangePasswordMutation() {
-  return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
-};
+/**
+ * __useChangePasswordMutation__
+ *
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *      newPassword: // value for 'newPassword'
+ *   },
+ * });
+ */
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
+      }
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const CreateBookingDocument = gql`
     mutation createBooking($booking: bookingInput!) {
   createBookingNew(booking: $booking) {
@@ -578,10 +601,32 @@ export const CreateBookingDocument = gql`
   }
 }
     `;
+export type CreateBookingMutationFn = Apollo.MutationFunction<CreateBookingMutation, CreateBookingMutationVariables>;
 
-export function useCreateBookingMutation() {
-  return Urql.useMutation<CreateBookingMutation, CreateBookingMutationVariables>(CreateBookingDocument);
-};
+/**
+ * __useCreateBookingMutation__
+ *
+ * To run a mutation, you first call `useCreateBookingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBookingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBookingMutation, { data, loading, error }] = useCreateBookingMutation({
+ *   variables: {
+ *      booking: // value for 'booking'
+ *   },
+ * });
+ */
+export function useCreateBookingMutation(baseOptions?: Apollo.MutationHookOptions<CreateBookingMutation, CreateBookingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBookingMutation, CreateBookingMutationVariables>(CreateBookingDocument, options);
+      }
+export type CreateBookingMutationHookResult = ReturnType<typeof useCreateBookingMutation>;
+export type CreateBookingMutationResult = Apollo.MutationResult<CreateBookingMutation>;
+export type CreateBookingMutationOptions = Apollo.BaseMutationOptions<CreateBookingMutation, CreateBookingMutationVariables>;
 export const CreatePostDocument = gql`
     mutation CreatePost($input: PostInput!) {
   createPost(input: $input) {
@@ -595,19 +640,63 @@ export const CreatePostDocument = gql`
   }
 }
     `;
+export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
 
-export function useCreatePostMutation() {
-  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
-};
+/**
+ * __useCreatePostMutation__
+ *
+ * To run a mutation, you first call `useCreatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostMutation, CreatePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, options);
+      }
+export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
+export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
+export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
   forgotPassword(email: $email)
 }
     `;
+export type ForgotPasswordMutationFn = Apollo.MutationFunction<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
 
-export function useForgotPasswordMutation() {
-  return Urql.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument);
-};
+/**
+ * __useForgotPasswordMutation__
+ *
+ * To run a mutation, you first call `useForgotPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useForgotPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [forgotPasswordMutation, { data, loading, error }] = useForgotPasswordMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useForgotPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument, options);
+      }
+export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
+export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
+export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($usernameOrEmail: String!, $password: String!) {
   login(usernameOrEmail: $usernameOrEmail, password: $password) {
@@ -615,19 +704,63 @@ export const LoginDocument = gql`
   }
 }
     ${RegularUserResponseFragmentDoc}`;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
-export function useLoginMutation() {
-  return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
-};
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      usernameOrEmail: // value for 'usernameOrEmail'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout
 }
     `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
 
-export function useLogoutMutation() {
-  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
-};
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($options: UserNamePasswordInput!) {
   register(options: $options) {
@@ -635,28 +768,99 @@ export const RegisterDocument = gql`
   }
 }
     ${RegularUserResponseFragmentDoc}`;
+export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
-export function useRegisterMutation() {
-  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
-};
+/**
+ * __useRegisterMutation__
+ *
+ * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerMutation, { data, loading, error }] = useRegisterMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
+      }
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const AdminScreenDocument = gql`
     query AdminScreen($RequestedOn: String!) {
   AdminScreen(RequestedOn: $RequestedOn)
 }
     `;
 
-export function useAdminScreenQuery(options: Omit<Urql.UseQueryArgs<AdminScreenQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<AdminScreenQuery>({ query: AdminScreenDocument, ...options });
-};
+/**
+ * __useAdminScreenQuery__
+ *
+ * To run a query within a React component, call `useAdminScreenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdminScreenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdminScreenQuery({
+ *   variables: {
+ *      RequestedOn: // value for 'RequestedOn'
+ *   },
+ * });
+ */
+export function useAdminScreenQuery(baseOptions: Apollo.QueryHookOptions<AdminScreenQuery, AdminScreenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AdminScreenQuery, AdminScreenQueryVariables>(AdminScreenDocument, options);
+      }
+export function useAdminScreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AdminScreenQuery, AdminScreenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AdminScreenQuery, AdminScreenQueryVariables>(AdminScreenDocument, options);
+        }
+export type AdminScreenQueryHookResult = ReturnType<typeof useAdminScreenQuery>;
+export type AdminScreenLazyQueryHookResult = ReturnType<typeof useAdminScreenLazyQuery>;
+export type AdminScreenQueryResult = Apollo.QueryResult<AdminScreenQuery, AdminScreenQueryVariables>;
 export const DatebookingsDocument = gql`
     query datebookings($sportpitchid: Int!, $RequestedOn: String!) {
   datebookings(sportpitchid: $sportpitchid, RequestedOn: $RequestedOn)
 }
     `;
 
-export function useDatebookingsQuery(options: Omit<Urql.UseQueryArgs<DatebookingsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<DatebookingsQuery>({ query: DatebookingsDocument, ...options });
-};
+/**
+ * __useDatebookingsQuery__
+ *
+ * To run a query within a React component, call `useDatebookingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDatebookingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDatebookingsQuery({
+ *   variables: {
+ *      sportpitchid: // value for 'sportpitchid'
+ *      RequestedOn: // value for 'RequestedOn'
+ *   },
+ * });
+ */
+export function useDatebookingsQuery(baseOptions: Apollo.QueryHookOptions<DatebookingsQuery, DatebookingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DatebookingsQuery, DatebookingsQueryVariables>(DatebookingsDocument, options);
+      }
+export function useDatebookingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DatebookingsQuery, DatebookingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DatebookingsQuery, DatebookingsQueryVariables>(DatebookingsDocument, options);
+        }
+export type DatebookingsQueryHookResult = ReturnType<typeof useDatebookingsQuery>;
+export type DatebookingsLazyQueryHookResult = ReturnType<typeof useDatebookingsLazyQuery>;
+export type DatebookingsQueryResult = Apollo.QueryResult<DatebookingsQuery, DatebookingsQueryVariables>;
 export const IsBookedBoolNewDocument = gql`
     query isBookedBoolNew($StartTime: String!, $EndTime: String!, $sportpitchid: Int!, $RequestedOn: String!) {
   isBookedBoolNew(
@@ -668,18 +872,70 @@ export const IsBookedBoolNewDocument = gql`
 }
     `;
 
-export function useIsBookedBoolNewQuery(options: Omit<Urql.UseQueryArgs<IsBookedBoolNewQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<IsBookedBoolNewQuery>({ query: IsBookedBoolNewDocument, ...options });
-};
+/**
+ * __useIsBookedBoolNewQuery__
+ *
+ * To run a query within a React component, call `useIsBookedBoolNewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsBookedBoolNewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsBookedBoolNewQuery({
+ *   variables: {
+ *      StartTime: // value for 'StartTime'
+ *      EndTime: // value for 'EndTime'
+ *      sportpitchid: // value for 'sportpitchid'
+ *      RequestedOn: // value for 'RequestedOn'
+ *   },
+ * });
+ */
+export function useIsBookedBoolNewQuery(baseOptions: Apollo.QueryHookOptions<IsBookedBoolNewQuery, IsBookedBoolNewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IsBookedBoolNewQuery, IsBookedBoolNewQueryVariables>(IsBookedBoolNewDocument, options);
+      }
+export function useIsBookedBoolNewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IsBookedBoolNewQuery, IsBookedBoolNewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IsBookedBoolNewQuery, IsBookedBoolNewQueryVariables>(IsBookedBoolNewDocument, options);
+        }
+export type IsBookedBoolNewQueryHookResult = ReturnType<typeof useIsBookedBoolNewQuery>;
+export type IsBookedBoolNewLazyQueryHookResult = ReturnType<typeof useIsBookedBoolNewLazyQuery>;
+export type IsBookedBoolNewQueryResult = Apollo.QueryResult<IsBookedBoolNewQuery, IsBookedBoolNewQueryVariables>;
 export const IsitbookedDocument = gql`
     query isitbooked($sportpitchid: Int!, $RequestedOn: String!) {
   isitbooked(sportpitchid: $sportpitchid, RequestedOn: $RequestedOn)
 }
     `;
 
-export function useIsitbookedQuery(options: Omit<Urql.UseQueryArgs<IsitbookedQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<IsitbookedQuery>({ query: IsitbookedDocument, ...options });
-};
+/**
+ * __useIsitbookedQuery__
+ *
+ * To run a query within a React component, call `useIsitbookedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsitbookedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsitbookedQuery({
+ *   variables: {
+ *      sportpitchid: // value for 'sportpitchid'
+ *      RequestedOn: // value for 'RequestedOn'
+ *   },
+ * });
+ */
+export function useIsitbookedQuery(baseOptions: Apollo.QueryHookOptions<IsitbookedQuery, IsitbookedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IsitbookedQuery, IsitbookedQueryVariables>(IsitbookedDocument, options);
+      }
+export function useIsitbookedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IsitbookedQuery, IsitbookedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IsitbookedQuery, IsitbookedQueryVariables>(IsitbookedDocument, options);
+        }
+export type IsitbookedQueryHookResult = ReturnType<typeof useIsitbookedQuery>;
+export type IsitbookedLazyQueryHookResult = ReturnType<typeof useIsitbookedLazyQuery>;
+export type IsitbookedQueryResult = Apollo.QueryResult<IsitbookedQuery, IsitbookedQueryVariables>;
 export const ListSpecificBookingsDocument = gql`
     query listSpecificBookings {
   listSpecificBookings {
@@ -700,9 +956,32 @@ export const ListSpecificBookingsDocument = gql`
 }
     `;
 
-export function useListSpecificBookingsQuery(options: Omit<Urql.UseQueryArgs<ListSpecificBookingsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<ListSpecificBookingsQuery>({ query: ListSpecificBookingsDocument, ...options });
-};
+/**
+ * __useListSpecificBookingsQuery__
+ *
+ * To run a query within a React component, call `useListSpecificBookingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListSpecificBookingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListSpecificBookingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListSpecificBookingsQuery(baseOptions?: Apollo.QueryHookOptions<ListSpecificBookingsQuery, ListSpecificBookingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListSpecificBookingsQuery, ListSpecificBookingsQueryVariables>(ListSpecificBookingsDocument, options);
+      }
+export function useListSpecificBookingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListSpecificBookingsQuery, ListSpecificBookingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListSpecificBookingsQuery, ListSpecificBookingsQueryVariables>(ListSpecificBookingsDocument, options);
+        }
+export type ListSpecificBookingsQueryHookResult = ReturnType<typeof useListSpecificBookingsQuery>;
+export type ListSpecificBookingsLazyQueryHookResult = ReturnType<typeof useListSpecificBookingsLazyQuery>;
+export type ListSpecificBookingsQueryResult = Apollo.QueryResult<ListSpecificBookingsQuery, ListSpecificBookingsQueryVariables>;
 export const ListPitchesDocument = gql`
     query listPitches {
   listPitches {
@@ -715,9 +994,32 @@ export const ListPitchesDocument = gql`
 }
     `;
 
-export function useListPitchesQuery(options: Omit<Urql.UseQueryArgs<ListPitchesQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<ListPitchesQuery>({ query: ListPitchesDocument, ...options });
-};
+/**
+ * __useListPitchesQuery__
+ *
+ * To run a query within a React component, call `useListPitchesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListPitchesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListPitchesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListPitchesQuery(baseOptions?: Apollo.QueryHookOptions<ListPitchesQuery, ListPitchesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListPitchesQuery, ListPitchesQueryVariables>(ListPitchesDocument, options);
+      }
+export function useListPitchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPitchesQuery, ListPitchesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListPitchesQuery, ListPitchesQueryVariables>(ListPitchesDocument, options);
+        }
+export type ListPitchesQueryHookResult = ReturnType<typeof useListPitchesQuery>;
+export type ListPitchesLazyQueryHookResult = ReturnType<typeof useListPitchesLazyQuery>;
+export type ListPitchesQueryResult = Apollo.QueryResult<ListPitchesQuery, ListPitchesQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -726,9 +1028,32 @@ export const MeDocument = gql`
 }
     ${RegularUserFragmentDoc}`;
 
-export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
-};
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PostsDocument = gql`
     query Posts($limit: Int!, $cursor: String) {
   posts(limit: $limit, cursor: $cursor) {
@@ -741,9 +1066,34 @@ export const PostsDocument = gql`
 }
     `;
 
-export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
-};
+/**
+ * __usePostsQuery__
+ *
+ * To run a query within a React component, call `usePostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function usePostsQuery(baseOptions: Apollo.QueryHookOptions<PostsQuery, PostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
+      }
+export function usePostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostsQuery, PostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
+        }
+export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
+export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
+export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
 export const SearchPitchDocument = gql`
     query searchPitch($ID: Int!) {
   searchPitch(ID: $ID) {
@@ -755,15 +1105,63 @@ export const SearchPitchDocument = gql`
 }
     `;
 
-export function useSearchPitchQuery(options: Omit<Urql.UseQueryArgs<SearchPitchQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<SearchPitchQuery>({ query: SearchPitchDocument, ...options });
-};
+/**
+ * __useSearchPitchQuery__
+ *
+ * To run a query within a React component, call `useSearchPitchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPitchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPitchQuery({
+ *   variables: {
+ *      ID: // value for 'ID'
+ *   },
+ * });
+ */
+export function useSearchPitchQuery(baseOptions: Apollo.QueryHookOptions<SearchPitchQuery, SearchPitchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchPitchQuery, SearchPitchQueryVariables>(SearchPitchDocument, options);
+      }
+export function useSearchPitchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchPitchQuery, SearchPitchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchPitchQuery, SearchPitchQueryVariables>(SearchPitchDocument, options);
+        }
+export type SearchPitchQueryHookResult = ReturnType<typeof useSearchPitchQuery>;
+export type SearchPitchLazyQueryHookResult = ReturnType<typeof useSearchPitchLazyQuery>;
+export type SearchPitchQueryResult = Apollo.QueryResult<SearchPitchQuery, SearchPitchQueryVariables>;
 export const TotalOpenDocument = gql`
     query totalOpen($ID: Int!) {
   totalOpen(ID: $ID)
 }
     `;
 
-export function useTotalOpenQuery(options: Omit<Urql.UseQueryArgs<TotalOpenQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<TotalOpenQuery>({ query: TotalOpenDocument, ...options });
-};
+/**
+ * __useTotalOpenQuery__
+ *
+ * To run a query within a React component, call `useTotalOpenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTotalOpenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTotalOpenQuery({
+ *   variables: {
+ *      ID: // value for 'ID'
+ *   },
+ * });
+ */
+export function useTotalOpenQuery(baseOptions: Apollo.QueryHookOptions<TotalOpenQuery, TotalOpenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TotalOpenQuery, TotalOpenQueryVariables>(TotalOpenDocument, options);
+      }
+export function useTotalOpenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TotalOpenQuery, TotalOpenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TotalOpenQuery, TotalOpenQueryVariables>(TotalOpenDocument, options);
+        }
+export type TotalOpenQueryHookResult = ReturnType<typeof useTotalOpenQuery>;
+export type TotalOpenLazyQueryHookResult = ReturnType<typeof useTotalOpenLazyQuery>;
+export type TotalOpenQueryResult = Apollo.QueryResult<TotalOpenQuery, TotalOpenQueryVariables>;

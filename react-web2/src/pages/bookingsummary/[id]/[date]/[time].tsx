@@ -1,11 +1,11 @@
+
 import { Badge, Box, Button, useColorMode, useToast } from "@chakra-ui/react";
 import moment from "moment";
-import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
 import { Layout } from "../../../../components/Layout";
 import { useCreateBookingMutation, useSearchPitchQuery } from "../../../../generated/graphql";
-import { createUrqlClient } from "../../../../utils/createUrqlClient";
+import { withApollo } from "../../../../utils/Apollo";
 import { UseIsAuth } from "../../../../utils/useIsAuth";
 
 const bookingsummary = ({}) => {
@@ -35,7 +35,7 @@ UseIsAuth();
       ? String(router.query.time)
       : "-1"
 
-      const [{ data }] = useSearchPitchQuery({
+      const { data } = useSearchPitchQuery({
         variables: {
           ID: intId,
         },
@@ -44,7 +44,7 @@ UseIsAuth();
     let sTime = moment(time.substring(0,7),"HHmmss").format("HH:mm:ss")
     let eTime = moment(time.substring(8,16),"HHmmss").format("HH:mm:ss")
     const toast = useToast()
-    const [, createBookingNew] = useCreateBookingMutation();
+    const [createBookingNew] = useCreateBookingMutation();
 return (
     <Layout>
     <Box maxW="lg" borderWidth="2px" rounded="lg" alignContent="center" overflow="hidden">
@@ -92,7 +92,21 @@ return (
           
           <Button ml={"auto"} 
           onClick={async () => {
-            const response = await createBookingNew({ booking:{RequestedOn:date1,StartTime:sTime, EndTime: eTime, sportpitchid:intId, statusid:1} });
+            const response = await createBookingNew({
+              variables: {
+                booking: {
+                  RequestedOn: date1,
+                  StartTime: sTime,
+                  EndTime: eTime,
+                  sportpitchid: intId,
+                  statusid: 1,
+                },
+              },
+              update: (cache) => {
+                cache.evict({ fieldName: "isitbooked" });
+                cache.evict({ fieldName: "datebookings" });
+              },
+            });
             
             if (response.data?.createBookingNew.errors) {
               
@@ -110,15 +124,15 @@ return (
             } else if (response.data?.createBookingNew.bookingk) {
               let data = response.data.createBookingNew.bookingk
               //worked
-              toast({
+              await toast({
                 title: "BookingID: "+data.id,
-                description: "Your booking has been successfully",
+                description: "Your booking has been successfully made",
                 status: "success",
-                duration: 9000,
-                isClosable: true,
-              }),5000
+                duration: 8000,
+                isClosable: false,
+              }),4000
 
-             router.push("/UserBookings");
+             router.push("/UserBookings") 
             }
           }}
           
@@ -131,4 +145,4 @@ return (
         </Layout>
 )
 }
-export default withUrqlClient(createUrqlClient)(bookingsummary);
+export default withApollo({ ssr: false })(bookingsummary);

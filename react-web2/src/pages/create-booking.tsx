@@ -1,7 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import moment from "moment";
-import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
 import { InputField } from "../components/InputField";
@@ -14,8 +13,8 @@ import {
   useSearchPitchQuery,
   useTotalOpenQuery
 } from "../generated/graphql";
+import { withApollo } from "../utils/Apollo";
 import { bookingFieldError } from "../utils/bookingFieldError";
-import { createUrqlClient } from "../utils/createUrqlClient";
 import { isBooked } from "../utils/isBooked";
 
 interface registerProps {}
@@ -36,18 +35,18 @@ interface registerProps {}
   
 
   //Fetches sport pitch from url
-  const [{ data, fetching }] = useSearchPitchQuery({
+  const { data,  loading } = useSearchPitchQuery({
     variables: {
       ID: Number(router.query.Pitch),
     },
   });
 
 
-  const [ex] = useTotalOpenQuery({
+  const ex = useTotalOpenQuery({
     variables: { ID: Number(router.query.Pitch)},
   });
   
-  if(!fetching && data !== undefined){
+  if(!loading && data !== undefined){
 
     it = Number(ex.data?.totalOpen)
     
@@ -69,7 +68,7 @@ interface registerProps {}
 
 
   
-  if (!ex.fetching) {
+  if (!ex.loading) {
     
     
     let i = 0;
@@ -92,7 +91,7 @@ interface registerProps {}
 }
   
 
-  const [, createBookingNew] = useCreateBookingMutation();
+  const [ createBookingNew] = useCreateBookingMutation();
   return (
     <Layout>
       <Formik
@@ -104,7 +103,7 @@ interface registerProps {}
           statusid: 1,
         }}
         onSubmit={async (booking, { setErrors }) => {
-          const response = await createBookingNew({ booking: booking });
+          const response = await createBookingNew({ variables: { booking: booking }});
           console.log(response);
           if (response.data?.createBookingNew.errors) {
             setErrors(bookingFieldError(response.data.createBookingNew.errors));
@@ -190,5 +189,5 @@ interface registerProps {}
     </Layout>
   );
 };
-export default withUrqlClient(createUrqlClient,{ ssr: true })(createBooking);
+export default withApollo({ ssr: true })(createBooking);
   

@@ -1,19 +1,20 @@
+import { useApolloClient } from "@apollo/client";
 import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { InputField } from "../components/InputField";
 import { Layout } from "../components/Layout";
 import { Wrapper } from "../components/Wrapper";
-import { useLoginMutation } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
+import { withApollo } from "../utils/Apollo";
 import { toErrorMap } from "../utils/toErrorMap";
 
  const Login: React.FC<{}> = () => {
-  const router = useRouter();
-  const [, login] = useLoginMutation();
+   const router = useRouter();
+   const ApolloClient = useApolloClient();
+  const [login] = useLoginMutation();
    return (
      <Layout>
        <Wrapper variant="small">
@@ -23,13 +24,29 @@ import { toErrorMap } from "../utils/toErrorMap";
          <Formik
            initialValues={{ usernameOrEmail: "", password: "" }}
            onSubmit={async (values, { setErrors }) => {
-             const response = await login(values);
+            // await ApolloClient.clearStore()
+             const response = await login({
+               variables: values,
+            
+               update: (cache, { data }) => {
+                 cache.writeQuery<MeQuery>({
+                   query: MeDocument,
+                   data: {
+                     __typename: "Query",
+                     me: data?.login.user,
+                   },
+                 });
+               },
+             });
              if (response.data?.login.errors) {
                setErrors(toErrorMap(response.data.login.errors));
              } else if (response.data?.login.user) {
+              
                if (typeof router.query.next === "string") {
+                 console.log("REACHED 1");
                  router.push(router.query.next);
                } else {
+                 console.log("REACHED 2")
                  router.push("/UserBookings");
                }
              }
@@ -75,4 +92,4 @@ import { toErrorMap } from "../utils/toErrorMap";
    );
 };
 
-export default withUrqlClient(createUrqlClient)(Login);
+export default withApollo({ ssr: false })(Login);

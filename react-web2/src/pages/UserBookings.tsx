@@ -1,9 +1,8 @@
 import { Box, Flex, Heading,  Stack, Text } from "@chakra-ui/react";
-import { withUrqlClient } from "next-urql";
 import React from "react";
 import { Layout } from "../components/Layout";
 import { useListSpecificBookingsQuery } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import { withApollo } from "../utils/Apollo";
 import { UseIsAuth } from "../utils/useIsAuth";
 
 
@@ -12,12 +11,12 @@ const UserBookings = () => {
     
     UseIsAuth();
     
-    const [{ data, fetching}] = useListSpecificBookingsQuery({
+    const { data, loading} = useListSpecificBookingsQuery({
     
     });
-  
     
-    if(!fetching && !data){
+    
+    if(!loading && !data){
       return <div>no posts</div>
     }
 
@@ -28,7 +27,7 @@ const UserBookings = () => {
             <Heading>My Bookings Page</Heading>
         
           </Flex>
-          {!data && fetching? (
+          {!data && loading? (
             <div>loading..</div>
           ) : (
             <Stack spacing={8}>
@@ -54,4 +53,4 @@ const UserBookings = () => {
     };
 
    
-    export default withUrqlClient(createUrqlClient)(UserBookings);
+    export default withApollo({ ssr: false })(UserBookings);

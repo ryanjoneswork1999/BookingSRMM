@@ -5,6 +5,8 @@ import { pipe, tap } from 'wonka';
 import { LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
+
+
 const errorExchange: Exchange = ({ forward }) => ops$ => {
   return pipe(
     forward(ops$),
@@ -39,18 +41,14 @@ export const createUrqlClient = (ssrExchange: any) => ({
           },
 
           createBookingNew: (_result, _args, cache, _info) => {
-            // betterUpdateQuery <CreateBookingMutation, IsitbookedQuery>(cache,
-            //   {query:IsitbookedDocument},
-            //   _result,
-
-            //   ( ) => (return)
-            // )
-
-            // cache.updateQuery()
-            cache.inspectFields("Query");
+           
+            cache.inspectFields("isitbooked(sportpitchid, RequestedOn)");
             cache.invalidate("Query", "listSpecificBookings");
             cache.invalidate("Query", "datebookings");
-            cache.invalidate("Query", "isitbooked");
+            cache.invalidate(
+              "isitbooked","",
+      
+            );
           },
 
           login: (_result, _args, cache, _info) => {
@@ -74,12 +72,29 @@ export const createUrqlClient = (ssrExchange: any) => ({
                 }
               }
             );
-
-            cache.inspectFields("Query");
-            cache.invalidate("Query", "listSpecificBookings");
-            cache.invalidate("Query", "datebookings");
-            cache.invalidate("Query", "isitbooked");
           },
+
+          // booking: ({ booking }, _args, cache) => {
+          //   const variables = {
+          //     sportpitchid: _args.sportpitchid,
+          //     RequestedOn: _args.requestedOn,
+          //   };
+          //   cache.updateQuery(
+          //     { query: IsitbookedDocument, variables },
+          //     (data) => {
+          //       if (data !== null) {
+          //         // cache.inspectFields("Query");
+          //         // cache.invalidate("Query", "listSpecificBookings");
+          //         // cache.invalidate("Query", "datebookings");
+          //         // cache.invalidate("Query", "IsitbookedQuery");
+
+          //         return data;
+          //       } else {
+          //         return null;
+          //       }
+          //     }
+          //   );
+          // },
 
           register: (_result, _args, cache, _info) => {
             betterUpdateQuery<RegisterMutation, MeQuery>(

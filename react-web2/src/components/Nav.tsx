@@ -23,25 +23,27 @@ import NextLink from "next/link";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
-import { useRouter } from "next/router";
+
+import {useApolloClient } from "@apollo/client"
 
 
 export default function nav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
  
     const { colorMode, toggleColorMode } = useColorMode();
-	const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-	const [{ data, fetching }] = useMeQuery({
-		pause: isServer(),
+  const [logout, { loading: logoutFetching }] = useLogoutMutation();
+  const ApolloClient = useApolloClient()
+	const { data, loading } = useMeQuery({
+		skip: isServer(),
 	});
 
-	const router = useRouter();
+	
 	// const bgColor = { dark: "gray.900", light: "white" };
 
 	// const color = { dark: "white", light: "black" };
 	let body = null;
 	//data is loading
-    if (fetching) {
+    if (loading) {
         body = null;
     } //user not loged in
     else if (!data?.me) {
@@ -62,7 +64,7 @@ export default function nav() {
                 />
                 <HStack spacing={8} alignItems={"center"}>
                   <Box>
-                    <Heading>Ryans Portfolio</Heading>
+                    <Heading>Ryan's Portfolio</Heading>
                   </Box>
                   <HStack
                     as={"nav"}
@@ -114,7 +116,7 @@ export default function nav() {
                 <Box pb={4} display={{ md: "none" }}>
                   <Stack as={"nav"} spacing={4}>
                     <NextLink href="/SportPitches">
-                      <Link className="nav-link">Create Booking</Link>
+                      <Link className="nav-link">Available Pitches</Link>
                     </NextLink>
                   </Stack>
                 </Box>
@@ -140,7 +142,7 @@ export default function nav() {
                  />
                  <HStack spacing={8} alignItems={"center"}>
                    <Box>
-                     <Heading>Ryans Portfolio</Heading>
+                     <Heading>Ryan's Portfolio</Heading>
                    </Box>
                    <HStack
                      as={"nav"}
@@ -188,7 +190,7 @@ export default function nav() {
                        <MenuItem
                          onClick={() => {
                            logout().finally(() => {
-                             router.reload();
+                             ApolloClient.resetStore()
                            });
                          }}
                          isLoading={logoutFetching}
@@ -205,7 +207,7 @@ export default function nav() {
                  <Box pb={4} display={{ md: "none" }}>
                    <Stack as={"nav"} spacing={4}>
                      <NextLink href="/SportPitches">
-                       <Link>Create Booking</Link>
+                       <Link>Available Pitches</Link>
                      </NextLink>
                      <NextLink href="/UserBookings">
                        <Link>My Bookings</Link>

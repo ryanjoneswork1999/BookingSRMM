@@ -1,11 +1,10 @@
 import { Box, Button, Flex, Heading, Link, Stack, Text } from "@chakra-ui/react";
-import { withUrqlClient } from "next-urql";
 import NextLink from 'next/link';
 import React from "react";
 import { Layout } from "../components/Layout";
 import { useListPitchesQuery } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 import moment from 'moment'
+import { withApollo } from "../utils/Apollo";
 
 const SportPitch = () => {
 
@@ -13,12 +12,12 @@ const SportPitch = () => {
   let date = moment().format("DD/MM/YYYY");
   
     //moment(time).add(1, 'hour')
-    const [{ data, fetching}] = useListPitchesQuery({
+  const { data, loading } = useListPitchesQuery({
     
     });
   
-    console.log(encodeURIComponent(date))
-    if(!fetching && !data){
+    
+    if(!loading && !data){
       return <div>no posts</div>
     }
 
@@ -29,7 +28,7 @@ const SportPitch = () => {
           <Flex align='center'> 
             <Heading>Sport Pitches</Heading>
           </Flex>
-          {!data && fetching? (
+          {!data && loading? (
             <div>loading..</div>
           ) : (
             <Stack spacing={8}>
@@ -64,4 +63,4 @@ const SportPitch = () => {
     };
 
    
-    export default withUrqlClient(createUrqlClient)(SportPitch);
+    export default withApollo({ ssr: false }) (SportPitch);

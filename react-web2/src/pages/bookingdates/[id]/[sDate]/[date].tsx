@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 import moment from "moment";
-import { withUrqlClient } from "next-urql";
+
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -21,7 +21,7 @@ import {
   useIsitbookedQuery,
   useSearchPitchQuery
 } from "../../../../generated/graphql";
-import { createUrqlClient } from "../../../../utils/createUrqlClient";
+import { withApollo } from "../../../../utils/Apollo";
 import { UseIsAuth } from "../../../../utils/useIsAuth";
 
 const datebookings = ({}) => {
@@ -35,13 +35,13 @@ const datebookings = ({}) => {
   const router = useRouter();
   
  // router.beforePopState
-  React.useEffect(()=>{
-    window.addEventListener('popstate', (_event) => {
-      //console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-      router.reload()
-    });
+  // React.useEffect(()=>{
+  //   window.addEventListener('popstate', (_event) => {
+  //     //console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+  //     router.reload()
+  //   });
     
-  })
+  // })
   //Fetches sport pitch from url
 
 
@@ -65,7 +65,7 @@ const datebookings = ({}) => {
   // let date: any = "";
 
   //Fetches sport pitch from url
-  const [{ data, fetching }] = useSearchPitchQuery({
+  const { data, loading } = useSearchPitchQuery({
     variables: {
       ID: intId,
     },
@@ -86,7 +86,7 @@ const datebookings = ({}) => {
   //   RequestedOn:date
   //   }
   // })
-  const [ex2] = useIsitbookedQuery({
+  const ex2  = useIsitbookedQuery({
     variables: {
       sportpitchid: intId,
       RequestedOn: date1,
@@ -95,9 +95,9 @@ const datebookings = ({}) => {
 
  
 
-  console.log(ex2);
 
-  const [datebok] = useDatebookingsQuery({
+
+  const  datebok  = useDatebookingsQuery({
     variables: {
       sportpitchid: intId,
       RequestedOn: date,
@@ -111,7 +111,7 @@ const datebookings = ({}) => {
       <Flex align="center">
         <Heading>Booking Dates & Times - {datecho} <br></br> </Heading>
       </Flex>
-      {!data && fetching ? (
+      {!data && loading ? (
         <div>loading..</div>
       ) : (
         
@@ -130,6 +130,7 @@ const datebookings = ({}) => {
                   <Button
                     as={Link}
                     bgColor={a.substring(13)}
+                    
                     color={color[colorMode]}
                     //color={a.bol ? "black" : "white"}
                     w={"100%"}
@@ -215,4 +216,4 @@ const datebookings = ({}) => {
     </Layout>
   );
 };
-export default withUrqlClient(createUrqlClient)(datebookings);
+export default withApollo({ ssr: false }) (datebookings);

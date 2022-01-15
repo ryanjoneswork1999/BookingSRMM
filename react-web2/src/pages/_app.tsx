@@ -3,23 +3,17 @@ import React from "react";
 
 import theme from "../theme";
 
-
-
-
-
 function MyApp({ Component, pageProps}) {
 
 
   return (
-    <ThemeProvider theme={theme}>
-      <ChakraProvider resetCSS theme={theme}>
-        
-          
+    
+      <ThemeProvider theme={theme}>
+        <ChakraProvider resetCSS theme={theme}>
           <Component {...pageProps} />
-
-        
-      </ChakraProvider>
+        </ChakraProvider>
       </ThemeProvider>
+
   );
 }
 
