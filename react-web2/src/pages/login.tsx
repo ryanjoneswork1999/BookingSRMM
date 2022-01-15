@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+
 import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import NextLink from "next/link";
@@ -13,7 +13,6 @@ import { toErrorMap } from "../utils/toErrorMap";
 
  const Login: React.FC<{}> = () => {
    const router = useRouter();
-   const ApolloClient = useApolloClient();
   const [login] = useLoginMutation();
    return (
      <Layout>
